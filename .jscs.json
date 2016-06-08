@@ -1,0 +1,15 @@
+{
+  "maximumLineLength": 140,
+  "validateLineBreaks": "LF",
+  "requireCamelCaseOrUpperCaseIdentifiers": null,
+  "validateIndentation": null,
+  "disallowSpacesInsideObjectBrackets": null,
+  "disallowSpacesInsideArrayBrackets": null,
+  "disallowSpacesInsideParentheses": null,
+  "requireSpacesInsideObjectBrackets": "all",
+  "requireSpacesInsideArrayBrackets": "allButNested",
+  "requireSpaceAfterBinaryOperators": true,
+  "requireCapitalizedConstructors": true,
+  "validateParameterSeparator": ", ",
+  "disallowMultipleVarDecl": null
+}

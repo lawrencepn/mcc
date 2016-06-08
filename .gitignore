@@ -1,0 +1,4 @@
+node_modules
+app/assets/bower_components
+.idea
+test_results
