@@ -4,7 +4,16 @@
 (function(){
 
 angular
-    .module('jdapp', ['ngSanitize','ui.router','ngMaterial','users','login'])
+    .module('jdapp', [
+        'ngSanitize',
+        'ui.router',
+        'ngMessages',
+        'ngMaterial',
+        'main',
+        'users',
+        'login',
+        'dashboard'
+    ])
     .config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider){
 
         $urlRouterProvider
@@ -20,8 +29,7 @@ angular
             .icon("phone"      , "./assets/svg/phone.svg"       , 512);
 
         $mdThemingProvider.theme('default')
-            .primaryPalette('brown')
-            .accentPalette('red');
+
 
     });
 })();

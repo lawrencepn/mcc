@@ -11,8 +11,7 @@
                 url: '/login',
                 templateUrl:'src/login/view/login.html',
                 controller: 'LoginController',
-                controllerAs:'ul'
+                controllerAs:'_login'
             })
         })
-
 })();

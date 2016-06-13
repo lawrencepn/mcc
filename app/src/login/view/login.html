@@ -1,28 +1,45 @@
-<md-content class="md-padding" layout-xs="column" layout="row" layout-align="center center">
-    <div flex="40">
-            <md-card>
+
+<div class="withBackground">
+<div style="min-height: 600px" layout-xs="row" layout="row" layout-align="center center">
+    <div flex-lg="30" flex-xs="100" flex-sm="90" flex-md="90">
+            <md-card class="md-padding">
                 <md-card-title>
                     <md-card-title-text>
-                        <span class="md-headline">Dashboard Sign In {{ul.top}}</span>
+                        <span class="md-headline">SIGN IN</span>
                     </md-card-title-text>
                 </md-card-title>
                 <md-card-content>
-                    <form name="loginForm">
+                    <form name="loginForm"  novalidate>
                         <md-input-container class="md-block">
                             <label>Username</label>
-                            <input type="text" ng-model="loginForm.name">
+                            <input required minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" md-no-asterisk type="email" name="userEmail" ng-model="loginForm.username">
+                            <div ng-messages="loginForm.userEmail.$error" role="alert">
+                                <div ng-message="required">
+                                    Username field cannot be empty.
+                                </div>
+                                <div ng-message-exp="['minlength', 'maxlength', 'pattern']">
+                                    Please provide a valid email address.
+                                </div>
+                            </div>
                         </md-input-container>
                         <md-input-container class="md-block">
-                            <label>Description</label>
-                            <input type="password" ng-model="loginForm.password">
+                            <label>Password</label>
+                            <input required type="password" name="userPassword" ng-model="loginForm.password">
+                            <div ng-messages="loginForm.userPassword.$error" role="alert">
+                                <div ng-message="required">
+                                    Password field cannot be empty
+                                </div>
+                            </div>
+
                         </md-input-container>
                     </form>
                 </md-card-content>
                 <md-card-actions layout="row" layout-align="start center">
-                    <md-button>Login</md-button>
+                    <md-button class="md-raised md-primary" ng-disabled="loginForm.$invalid" ng-click="_login.authenticateUser()">Login</md-button>
                     <md-button>Register</md-button>
                 </md-card-actions>
-
             </md-card>
+        <div class="login_semi">Terms | Help</div>
         </div>
-</md-content>
+</div>
+</div>

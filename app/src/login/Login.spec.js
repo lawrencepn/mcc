@@ -2,13 +2,13 @@
  * Created by lawrencenyakiso on 2016/06/07.
  */
 describe('Login module', function() {
-    var LoginController, userService;
+    var LoginController, LoginService;
 
     beforeEach(function(){
         module('jdapp');
 
-        inject(function($controller, _userService_){
-            userService = _userService_;
+        inject(function($controller, _LoginService_){
+            LoginService = _LoginService_;
             LoginController = $controller('LoginController');
         })
     });
@@ -25,10 +25,9 @@ describe('Login module', function() {
             userName:"john",
             password:"password"
         }
-
-        expect(LoginController.userAuth.userName).toEqual('john');
+        var token = LoginController.d.access_token;
+        expect(token).toEqual('82c687ea97e9333596ca513ec1d0e05238b8391aa687248829cf6e64b7e3ea3c91');
         expect(LoginController.userAuth.password).toEqual('password')
     })
-
 
 });

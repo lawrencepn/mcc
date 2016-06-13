@@ -19,17 +19,30 @@ module.exports = function( config ) {
             'app/assets/bower_components/angular-aria/angular-aria.js',
             'app/assets/bower_components/angular-material/angular-material.js',
             'app/assets/bower_components/angular-material/angular-material-mocks.js',
+            'app/assets/bower_components/angular-messages/angular-messages.js',
             'app/assets/bower_components/angular-ui-router/release/angular-ui-router.min.js',
             'app/assets/bower_components/angular-mocks/angular-mocks.js',
             'app/app.js',
+            //user
             'app/src/users/Users.js',
             'app/src/users/UserController.js',
             'app/src/users/UserService.js',
             'app/src/users/User.spec.js',
+            //login
             'app/src/login/Login.js',
             'app/src/login/LoginController.js',
+            'app/src/login/LoginService.js',
             'app/src/login/Login.spec.js',
-            'app/src/**/*.html',
+            //main
+            'app/src/main/Main.js',
+            'app/src/main/MainController.js',
+            'app/src/main/Main.spec.js',
+            //dashboard
+            'app/src/dashboard/Dashboard.js',
+            'app/src/dashboard/DashboardController.js',
+            'app/src/dashboard/Dashboard.spec.js',
+            //all html templates
+            'app/src/**/*.html'
 
         ],
 
