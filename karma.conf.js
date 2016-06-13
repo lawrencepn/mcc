@@ -6,6 +6,12 @@ module.exports = function( config ) {
         // base path
         // , that will be used to resolve files and exclude
        // basePath: './',
+        customLaunchers: {
+            Chrome_travis_ci: {
+                base: 'Chrome',
+                flags: ['--no-sandbox']
+            }
+        },
 
 
         // testing framework to use (jasmine/mocha/qunit/...)
@@ -70,5 +76,9 @@ module.exports = function( config ) {
         // if true, it capture browsers, run tests and exit
         singleRun: true
     } );
+
+    if(process.env.TRAVIS){
+        config.browsers = ['Chrome_travis_ci'];
+    }
 
 };
