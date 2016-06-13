@@ -20,7 +20,8 @@
 
         self.userAuth = {
             userName:"john",
-            password:"password"
+            password:"password",
+            token: "82c687ea97e9333596ca513ec1d0e05238b8391aa687248829cf6e64b7e3ea3c91"
         }
 
         self.formValid;

@@ -21,12 +21,9 @@ describe('Login module', function() {
     });
 
     it('should define auth model ...', function(){
-        LoginController.userAuth = {
-            userName:"john",
-            password:"password"
-        }
-        var token = LoginController.d.access_token;
-        expect(token).toEqual('82c687ea97e9333596ca513ec1d0e05238b8391aa687248829cf6e64b7e3ea3c91');
+
+        var faketoken = LoginController.userAuth.token;
+        expect(faketoken).toEqual('82c687ea97e9333596ca513ec1d0e05238b8391aa687248829cf6e64b7e3ea3c91');
         expect(LoginController.userAuth.password).toEqual('password')
     })
 
