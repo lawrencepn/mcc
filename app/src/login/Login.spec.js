@@ -20,6 +20,22 @@ describe('Login module', function() {
 
     });
 
+    it('should call the login service', function () {
+
+        spyOn(LoginService, 'auth').and.callThrough();
+
+    })
+
+    //should login user successfully
+    it('should get a valid token', function(){
+
+        LoginController.auth
+        expect(LoginController.token).toEqual(LoginController.userAuth.token)
+
+    });
+
+    //should fail login with wrong credentials
+
     it('should define auth model ...', function(){
 
         var faketoken = LoginController.userAuth.token;

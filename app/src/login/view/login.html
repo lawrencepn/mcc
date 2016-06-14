@@ -1,7 +1,12 @@
-
-<div class="withBackground">
-<div style="min-height: 600px" layout-xs="row" layout="row" layout-align="center center">
-    <div flex-lg="30" flex-xs="100" flex-sm="90" flex-md="90">
+<div layout="row" layout-align="center">
+<div layout="column" flex-xs="100" flex-sm="90" flex-md="33" flex-lg="33" >
+    <div flex class="login_logo" hide-xs hide-sm>
+        <img src="assets/img/mcc_logo.png" alt="My Cloud Central">
+    </div>
+    <div flex class="login_logo_sm" hide-md hide-lg >
+        <img src="assets/img/mcc_logo.png" alt="My Cloud Central">
+    </div>
+    <div flex >
             <md-card class="md-padding">
                 <md-card-title>
                     <md-card-title-text>
@@ -35,11 +40,16 @@
                     </form>
                 </md-card-content>
                 <md-card-actions layout="row" layout-align="start center">
-                    <md-button class="md-raised md-primary" ng-disabled="loginForm.$invalid" ng-click="_login.authenticateUser()">Login</md-button>
-                    <md-button>Register</md-button>
+
+                    <md-button class="md-raised md-primary" ng-disabled="loginForm.$invalid" ng-click="_login.authenticateUser(loginForm)">Login</md-button>
+                    <div flex flex-offset="10">
+                        <md-checkbox md-no-ink aria-label="Checkbox No Ink" ng-model="loginForm.stayLoggedIn" class="md-primary login_checkbox">
+                            Stay logged in.
+                        </md-checkbox>
+                    </div>
                 </md-card-actions>
             </md-card>
         <div class="login_semi">Terms | Help</div>
-        </div>
+    </div>
 </div>
 </div>

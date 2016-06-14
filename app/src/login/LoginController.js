@@ -16,31 +16,34 @@
      */
     function LoginController( LoginService, $state ) {
         var self = this;
-        self.top = "top";
 
-        self.userAuth = {
-            userName:"john",
-            password:"password",
-            token: "82c687ea97e9333596ca513ec1d0e05238b8391aa687248829cf6e64b7e3ea3c91"
-        }
+        //is user token still valid?
 
-        self.formValid;
+        //got here from dashboard -> handle
 
-        self.authenticateUser = function(){
+        //is keep logged in selected
 
-            try {
+        self.authenticateUser = function(form){
+            if(!form.$invalid){
+                LoginService.auth(form.username, form.password).then(function (response) {
 
-                LoginService.auth(self.userAuth).then(function (response) {
-                    self.d = response.data
-                    //$state.go('main.dashboard')
-                    //emulate invalid
-                    self.loginForm.$invalid = true
-                });
+                    if(validateResponse(response)){
+                        $state.go('main.dashboard')
+                    }
 
-            }catch(e){
-
+                }).catch(function(e){
+                    console.log(e)
+                })
             }
+        };
 
+        function validateResponse(response){
+            //is response 200
+            if(response.status == 200){
+                //token factory
+                self.token = response.data.access_token;
+                return true
+            }
         }
 
     }

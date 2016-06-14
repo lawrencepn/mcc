@@ -4,7 +4,7 @@ html, body {
   height:100%;
   margin: 0px;
   padding: 0px;
-  background: rgb(238,238,238);
+  background: #ffffff;
 }
 
 /* Toolbar area */
@@ -137,7 +137,35 @@ span.name {
   position: relative;
   height: 100%;
 }
+.login_main{
+
+}
+.login_logo{
+  margin-top: 30%;
+  margin-bottom: 40px;
+}
+.login_logo img{
+  display: block;
+  position: relative;
+  margin: auto;
+  width: 180px;
+}
+
+.login_logo_sm{
+  margin-top: 10%;
+  margin-bottom: 40px;
+}
+.login_logo_sm img{
+  display: block;
+  position: relative;
+  margin: auto;
+  width: 120px;
+}
+
 .login_semi{
   text-align: center;
   color: white;
+}
+.login_checkbox{
+  margin-bottom: 0px;
 }
