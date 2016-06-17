@@ -27,6 +27,7 @@ angular
             clientSecret: '5da024ba44084b7e92b3702aa5e57ba2',
             grantPath: '/oauth/token',
             revokePath: '/oauth/revoke'
+
         });
 
         $mdIconProvider

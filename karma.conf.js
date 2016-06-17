@@ -28,7 +28,13 @@ module.exports = function( config ) {
             'app/assets/bower_components/angular-messages/angular-messages.js',
             'app/assets/bower_components/angular-ui-router/release/angular-ui-router.min.js',
             'app/assets/bower_components/angular-mocks/angular-mocks.js',
+            'app/assets/bower_components/angular-cookies/angular-cookies.min.js',
+            'app/assets/bower_components/query-string/query-string.js',
+            'app/assets/bower_components/angular-oauth2/dist/angular-oauth2.min.js',
             'app/app.js',
+            //constants
+            'app/common/constants_auth.js',
+            'app/common/constants_api.js',
             //user
             'app/src/users/Users.js',
             'app/src/users/UserController.js',

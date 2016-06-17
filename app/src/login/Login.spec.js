@@ -1,46 +1,51 @@
 /**
  * Created by lawrencenyakiso on 2016/06/07.
  */
-describe('Login module', function() {
-    var LoginController, LoginService;
+describe('Login Controller', function() {
+    var LoginController, LoginService, deferredTokenCall, token;
+    var form = {
+        $invalid : false,
+        username:'test@email.com',
+        password:'password123',
+        $setSubmitted:function(){return}
+    }
 
     beforeEach(function(){
         module('jdapp');
 
-        inject(function($controller, _LoginService_){
+        inject(function($controller, _LoginService_, _$q_, $rootScope){
+            scope = $rootScope.$new();
             LoginService = _LoginService_;
             LoginController = $controller('LoginController');
+            deferredTokenCall = _$q_.defer();
+
         })
+
+        spyOn(LoginService, 'auth').and.returnValue( deferredTokenCall.promise );
     });
 
 
-    it('should ....', function() {
+    it('should  be defined....', function() {
             //spec body
         expect(LoginController).toBeDefined();
 
     });
 
-    it('should call the login service', function () {
+    it('should call the login service once', function () {
 
-        spyOn(LoginService, 'auth').and.callThrough();
+        LoginController.authenticateUser(form);
+        expect(LoginService.auth).toHaveBeenCalled();
 
     })
 
-    //should login user successfully
-    it('should get a valid token', function(){
+    it('should not call the login service', function(){
 
-        LoginController.auth
-        expect(LoginController.token).toEqual(LoginController.userAuth.token)
+        form.$invalid = true;
+        LoginController.authenticateUser(form);
+        expect(LoginService.auth.calls.any()).toEqual(false);
+        expect(LoginController.token).toBeNull()
 
-    });
-
-    //should fail login with wrong credentials
-
-    it('should define auth model ...', function(){
-
-        var faketoken = LoginController.userAuth.token;
-        expect(faketoken).toEqual('82c687ea97e9333596ca513ec1d0e05238b8391aa687248829cf6e64b7e3ea3c91');
-        expect(LoginController.userAuth.password).toEqual('password')
     })
+
 
 });

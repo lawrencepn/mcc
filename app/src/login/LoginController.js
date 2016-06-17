@@ -16,14 +16,19 @@
      */
     function LoginController( LoginService, $state ) {
         var self = this;
-
+        self.token = null;
+        self.formError = false
+        self.authenticateUser = authenticateUser;
+        self.clientDomain = window.clientDomain;
         //is user token still valid?
 
         //got here from dashboard -> handle
 
         //is keep logged in selected
 
-        self.authenticateUser = function(form){
+        function authenticateUser (form){
+
+            form.$setSubmitted();
             if(!form.$invalid){
                 LoginService.auth(form.username, form.password).then(function (response) {
 
@@ -32,8 +37,17 @@
                     }
 
                 }).catch(function(e){
+
+                    //TODO:deligate to exception handler
                     console.log(e)
+
+                    if(e.data.error == "invalid_grant"){
+                        self.formError = true
+                    }
                 })
+
+            }else{
+
             }
         };
 
@@ -43,6 +57,11 @@
                 //token factory
                 self.token = response.data.access_token;
                 return true
+            }else{
+
+                //wrong creds, clear form and show error message
+                form.$setPristine();
+                form.$setUntouched();
             }
         }
 

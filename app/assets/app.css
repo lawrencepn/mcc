@@ -121,9 +121,20 @@ md-toolbar h1 {
 }
 
 
+
 md-bottom-sheet  md-icon {
   margin-right:20px;
 }
+
+/*
+  ########################Customs Start###########################
+*/
+.md-padding-half{
+  padding:8px;
+}
+/*
+  ########################Customs Ed###########################
+*/
 
 span.name {
   font-weight: bold;
@@ -164,8 +175,13 @@ span.name {
 
 .login_semi{
   text-align: center;
-  color: white;
 }
 .login_checkbox{
   margin-bottom: 0px;
+}
+.formError{
+  color: red;
+}
+.formError p{
+  margin: 0;
 }
