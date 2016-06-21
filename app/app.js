@@ -15,7 +15,7 @@ angular
         'login',
         'dashboard'
     ])
-    .config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, OAuthProvider){
+    .config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, OAuthProvider, OAuthTokenProvider){
 
         $urlRouterProvider
             .otherwise( '/login' );
@@ -28,6 +28,13 @@ angular
             grantPath: '/oauth/token',
             revokePath: '/oauth/revoke'
 
+        });
+
+        OAuthTokenProvider.configure({
+            name: 'token',
+            options: {
+                secure: true
+            }
         });
 
         $mdIconProvider
@@ -44,6 +51,7 @@ angular
 
     })
     .run(function($rootScope, $window, OAuth){
+
         $rootScope.$on('oauth:error', function(event, rejection) {
             // Ignore `invalid_grant` error - should be catched on `LoginController`.
             if ('invalid_grant' === rejection.data.error) {

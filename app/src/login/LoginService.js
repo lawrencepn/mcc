@@ -29,7 +29,7 @@
                     msp_id : "1",
                     grant_type: authConstants.grant_type,
                     response_type: authConstants.response_type
-                }
+                };
 
                 var options = {
                     headers: {
@@ -41,6 +41,7 @@
                 var promise = OAuth.getAccessToken(user, options);
 
                 return promise;
+
             },
             refreshToken : function(){
 

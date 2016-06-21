@@ -29,7 +29,7 @@
 
   </head>
 
-  <body ng-app="jdapp"  ng-cloak>
+  <body ng-app="jdapp" layout="column" ng-controller="AppController" ng-cloak>
   <ui-view></ui-view>
 
 
@@ -65,8 +65,9 @@
 
     <script src="app.js"></script>
 
-    <!--Constants-->
+    <!--Constants and common js-->
     <script src="common/constants_auth.js"></script>
+    <script src="common/AppController.js"></script>
 
   </body>
 </html>

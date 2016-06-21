@@ -1,14 +1,17 @@
 /**
+ * Created by lawrencenyakiso on 2016/06/21.
+ */
+/**
  * Created by lawrencenyakiso on 2016/06/11.
  */
 (function(){
 
     angular
         .module('main')
-        .controller('MainController', ['OAuth','$state', MainController]);
+        .controller('AppController', ['OAuth','$state', MainController]);
 
     /**
-     * Main Controller
+     * App Controller
      * @param $scope
      * @param $mdSidenav
      * @param avatarsService
@@ -17,12 +20,8 @@
     function MainController( OAuth , $state) {
         var self = this;
 
-        self.demolist = [
-            {name:'VODACOM'},
-            {name:'MTN'}
-        ];
-
         //ckeck if token is valid first
+        console.log(OAuth.isAuthenticated())
 
     }
 })();

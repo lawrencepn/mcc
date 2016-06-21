@@ -39,15 +39,17 @@
                 }).catch(function(e){
 
                     //TODO:deligate to exception handler
-                    console.log(e)
-
-                    if(e.data.error == "invalid_grant"){
+                    if(e.data != undefined) {
+                        if (e.data.error == "invalid_grant") {
+                            self.formError = true
+                        }
+                    }else{
                         self.formError = true
                     }
                 })
 
             }else{
-
+                //TODO:invalid submission msg
             }
         };
 

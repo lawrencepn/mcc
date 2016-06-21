@@ -1,3 +1,50 @@
-<div>
-    <ui-view></ui-view>
-</div>
+<section flex layout="row">
+    <md-sidenav
+            class="md-sidenav-left md-whiteframe-z2"
+            md-component-id="left"
+            md-is-locked-open="$mdMedia('gt-sm')"
+            md-disable-backdrop=true
+            md-whiteframe="4">
+
+        <md-toolbar class="md-theme-indigo">
+            <h1 class="md-toolbar-tools">Menu</h1>
+        </md-toolbar>
+
+        <md-content layout-padding layout="column">
+            <md-select ng-model="ctrl.userState" placeholder="Select an MSP">
+                <md-option ng-repeat="item in _main.demolist" value="{{item.name}}">
+                    {{item.name}}
+                </md-option>
+            </md-select>
+
+            <md-button ng-click="_dashboard.close()" class="md-primary">
+                Close Sidenav Left
+            </md-button>
+
+        </md-content>
+    </md-sidenav>
+
+    <div layout="column" flex layout-fill>
+        <md-toolbar layout="row" class="md-hue-2">
+            <div class="md-toolbar-tools">
+                <h2>
+                    <span>MCC</span>
+                </h2>
+                <span flex></span>
+                <md-select layout-padding ng-model="ctrl.userState">
+                    <md-option ng-repeat="item in _main.demolist" value="{{item.name}}">
+                        {{item.name}}
+                    </md-option>
+                </md-select>
+                <md-button ng-click="_main.openLeft()" class="md-icon-button" aria-label="Settings" ng-disabled="true">
+                    <md-icon md-svg-icon="assets/svg/menu.svg"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-content flex>
+            <div layout="column" layout-align="top center" flex>
+                <ui-view></ui-view>
+            </div>
+        </md-content>
+    </div>
+</section>

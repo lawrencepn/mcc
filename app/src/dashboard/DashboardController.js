@@ -5,7 +5,7 @@
 
     angular
         .module('dashboard')
-        .controller('DashboardController', [DashboardController]);
+        .controller('DashboardController', ['$mdSidenav', DashboardController]);
 
     /**
      * Main Controller
@@ -14,7 +14,11 @@
      * @param avatarsService
      * @constructor
      */
-    function DashboardController( ) {
+    function DashboardController( $mdSidenav ) {
         var self = this;
+
+        self.close = function() {
+            $mdSidenav('left').close();
+        };
     }
 })();
