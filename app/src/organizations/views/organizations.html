@@ -1,0 +1,27 @@
+<div ng-cloak>
+    <md-tabs md-dynamic-height md-border-bottom>
+        <md-tab label="Organizations">
+            <md-toolbar>
+                <div class="md-toolbar-tools gray">
+
+                    <span flex></span>
+                    <md-button aria-label="Add Company" ng-click="_organizations.addOrganization()">
+                        Add Company
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-content class="md-padding">
+
+                <md-list>
+                    <md-list-item  ng-repeat="item in _organizations.organizationList" ng-click="_organizations.viewOrganization(item.name, $index)">
+                        <div class="md-list-item-text">
+                            <p>{{item.name}}</p>
+                        </div>
+                        <md-button class="md-secondary">Edit</md-button>
+                        <md-divider ng-if="!$last"></md-divider>
+                    </md-list-item>
+                </md-list>
+            </md-content>
+        </md-tab>
+    </md-tabs>
+</div>

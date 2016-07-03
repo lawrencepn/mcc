@@ -9,7 +9,7 @@
         .config(function($stateProvider){
 
             $stateProvider.state('main.dashboard', {
-                url: '/main/dashboard',
+                url: '/dashboard',
                 templateUrl:'src/dashboard/view/dashboard.html',
                 controller: 'DashboardController',
                 controllerAs:'_dashboard'

@@ -11,9 +11,17 @@ angular
         'ngMaterial',
         'angular-oauth2',
         'main',
+        'user',
+        'organization',
+        'msp',
+        'MCCAPI',
         'users',
         'login',
-        'dashboard'
+        'dashboard',
+        'cachebox',
+        'organizations',
+        'org'
+
     ])
     .config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, OAuthProvider, OAuthTokenProvider){
 
@@ -22,7 +30,7 @@ angular
 
         OAuthProvider
             .configure({
-            baseUrl: 'https://api.mcctest.co.za/CloudCommandService',
+            baseUrl: 'http://api.mcctest.co.za/CloudCommandService',
             clientId: 'cloudcommandportal',
             clientSecret: '5da024ba44084b7e92b3702aa5e57ba2',
             grantPath: '/oauth/token',
@@ -33,7 +41,7 @@ angular
         OAuthTokenProvider.configure({
             name: 'token',
             options: {
-                secure: true
+                secure: false
             }
         });
 
@@ -58,9 +66,9 @@ angular
                 return;
             }
 
-            // Refresh token when a `invalid_token` error occurs.
+            // Ignore `invalid_token` error - should be catched on `LoginController`.
             if ('invalid_token' === rejection.data.error) {
-                return OAuth.getRefreshToken();
+                return;
             }
 
             // Redirect to `/login` with the `error_reason`.

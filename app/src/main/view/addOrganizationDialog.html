@@ -1,0 +1,42 @@
+<md-dialog id="addOrg" flex="35" aria-label="Add Company" ng-controller="AddOrgController as _addOrg">
+
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Add Company</h2>
+                <span flex></span>
+
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <form name="addOrg">
+            <div class="md-dialog-content">
+                <div layout="column">
+                <md-input-container class="md-block">
+                    <label>Organization Name</label>
+                    <input type="text" required name="orgName" ng-model="neworg.name" >
+                    <div ng-messages="addOrg.orgName.$error" role="alert">
+                        <div ng-message="required">
+                            Name field cannot be empty.
+                        </div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <md-switch name="orgEnable" ng-model="neworg.status">Enable?</md-switch>
+                </md-input-container>
+                </div>
+            </div>
+            </form>
+
+        </md-dialog-content>
+        <md-dialog-actions layout="row" md-whiteframe="2">
+            <md-button ng-click="_addOrg.cancel()" md-autofocus>
+                Cancel
+            </md-button>
+            <span flex></span>
+            <md-button ng-click="_addOrg.addOrg(neworg)">
+                Add
+            </md-button>
+        </md-dialog-actions>
+
+
+</md-dialog>

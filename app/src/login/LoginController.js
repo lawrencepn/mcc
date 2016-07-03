@@ -3,9 +3,11 @@
  */
 (function(){
 
+    'use strict';
+
     angular
         .module('login')
-        .controller('LoginController', ['LoginService','$state', LoginController]);
+        .controller('LoginController', ['LoginService','$state','OAuth', LoginController]);
 
     /**
      * Main Controller for the Angular Material Starter App
@@ -14,7 +16,7 @@
      * @param avatarsService
      * @constructor
      */
-    function LoginController( LoginService, $state ) {
+    function LoginController( LoginService, $state, OAuth ) {
         var self = this;
         self.token = null;
         self.formError = false
@@ -25,6 +27,10 @@
         //got here from dashboard -> handle
 
         //is keep logged in selected
+        if(OAuth.isAuthenticated()){
+            //$state.go('main.dashboard')
+        }
+
 
         function authenticateUser (form){
 
@@ -33,6 +39,9 @@
                 LoginService.auth(form.username, form.password).then(function (response) {
 
                     if(validateResponse(response)){
+                        console.log(response)
+                        //cache factory
+
                         $state.go('main.dashboard')
                     }
 

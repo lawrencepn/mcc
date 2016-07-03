@@ -6,7 +6,7 @@
     angular
         .module('jdapp')
         .constant('api', {
-            host:"https://api.mcctest.co.za",
+            host:"http://api.mcctest.co.za",
             path:"CloudCommandService/api/",
             version:"v1",
             routes: {

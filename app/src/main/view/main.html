@@ -10,16 +10,41 @@
             <h1 class="md-toolbar-tools">Menu</h1>
         </md-toolbar>
 
-        <md-content layout-padding layout="column">
-            <md-select ng-model="ctrl.userState" placeholder="Select an MSP">
-                <md-option ng-repeat="item in _main.demolist" value="{{item.name}}">
-                    {{item.name}}
-                </md-option>
-            </md-select>
+        <md-content layout="column">
 
-            <md-button ng-click="_dashboard.close()" class="md-primary">
-                Close Sidenav Left
-            </md-button>
+            <md-list>
+                <md-subheader class="md-no-sticky">Overview</md-subheader>
+                <md-list-item ng-click="_main.viewNavigate('dashboard')">
+                    <md-icon md-svg-icon="assets/svg/menu.svg"></md-icon>
+                    <p>Dashboard</p>
+                </md-list-item>
+                <md-divider></md-divider>
+                <md-divider></md-divider>
+                <md-subheader class="md-no-sticky">MSP Actions</md-subheader>
+                <md-list-item ng-click="_main.viewNavigate('organizations')">
+                    <md-icon md-svg-icon="assets/svg/menu.svg"></md-icon>
+                    <p>Organizations</p>
+                </md-list-item>
+                <md-list-item ng-click="_main.viewNavigate('users')">
+                    <md-icon md-svg-icon="assets/svg/menu.svg"></md-icon>
+                    <p>Users</p>
+                </md-list-item>
+                <md-subheader class="md-no-sticky">Organization Actions</md-subheader>
+                <md-list-item ng-click="activeCompany()" ng-disabled="_main.orgNotActive">
+                    <md-icon md-svg-icon="assets/svg/menu.svg"></md-icon>
+                    <p>Services</p>
+                </md-list-item>
+                <md-list-item ng-click="activeCompany()" ng-disabled="_main.orgNotActive">
+                    <md-icon md-svg-icon="assets/svg/menu.svg"></md-icon>
+                    <p>Tickets</p>
+                </md-list-item>
+                <md-list-item ng-click="activeCompany()" ng-disabled="_main.orgNotActive">
+                    <md-icon md-svg-icon="assets/svg/menu.svg"></md-icon>
+                    <p>Users</p>
+                </md-list-item>
+
+            </md-list>
+
 
         </md-content>
     </md-sidenav>
@@ -28,13 +53,14 @@
         <md-toolbar layout="row" class="md-hue-2">
             <div class="md-toolbar-tools">
                 <h2>
-                    <span>MCC</span>
+                    <span>MCC | {{_main.mspName}}</span>
                 </h2>
+                <h3 ng-if="!_main.orgNotActive">
+                    <span>&nbsp;| {{_main.activeOrgName}}</span>
+                </h3>
                 <span flex></span>
-                <md-select layout-padding ng-model="ctrl.userState">
-                    <md-option ng-repeat="item in _main.demolist" value="{{item.name}}">
-                        {{item.name}}
-                    </md-option>
+                <md-select ng-model="_main.organizationList" md-on-open="_main.loadOrgs()" placeholder="Select Organization" ng-if="!_main.orgNotActive">
+                    <md-option ng-repeat="item in _main.organizationList" value="{{item.name}}">{{item.name}}</md-option>
                 </md-select>
                 <md-button ng-click="_main.openLeft()" class="md-icon-button" aria-label="Settings" ng-disabled="true">
                     <md-icon md-svg-icon="assets/svg/menu.svg"></md-icon>
@@ -42,7 +68,7 @@
             </div>
         </md-toolbar>
         <md-content flex>
-            <div layout="column" layout-align="top center" flex>
+            <div layout="column" layout-align="top" flex>
                 <ui-view></ui-view>
             </div>
         </md-content>

@@ -8,7 +8,7 @@
 
     angular
         .module('main')
-        .controller('AppController', ['OAuth','$state', MainController]);
+        .controller('AppController', ['$state', MainController]);
 
     /**
      * App Controller
@@ -17,11 +17,10 @@
      * @param avatarsService
      * @constructor
      */
-    function MainController( OAuth , $state) {
+    function MainController($state) {
         var self = this;
 
         //ckeck if token is valid first
-        console.log(OAuth.isAuthenticated())
 
     }
 })();

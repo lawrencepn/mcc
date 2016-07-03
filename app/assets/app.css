@@ -95,3 +95,9 @@ span.name {
 .formError p{
   margin: 0;
 }
+#dialogContent_addOrg .md-block{
+  margin: 0;
+}
+.md-toolbar-tools.gray{
+  background-color: gray;
+}
