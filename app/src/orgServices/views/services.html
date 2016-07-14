@@ -1,0 +1,62 @@
+<md-toolbar>
+    <div class="md-toolbar-tools gray">
+
+        <span flex></span>
+        <md-button aria-label="Add Organization" ng-click="_orgservices.manageServices($event)">
+            Manage Services
+        </md-button>
+    </div>
+</md-toolbar>
+
+<div ng-cloak>
+
+    <md-tabs md-dynamic-height md-border-bottom>
+        <md-tab ng-repeat="tab in _orgservices.services"
+                ng-disabled="tab.disabled"
+                label="{{tab.name}}">
+            <md-content class="md-padding" ng-if="tab.id == 1">
+
+                <div flex="30" ng-if="_orgservices.hasSML == true">
+
+
+
+
+                    <form method="post" action="{{_orgservices.samlData.saml_url}}">
+                    <md-card>
+                        <md-card-title>
+                            <md-card-title-text>
+                                <span class="md-headline">Meraki Services</span>
+                                <span class="md-subhead">Manage your Meraki Network Services</span>
+                            </md-card-title-text>
+                        </md-card-title>
+                        <md-card-content>
+                            <input type="hidden" name="SAMLResponse" value="{{_orgservices.samlData.saml_response}}" />
+                            <input type="hidden" name="RelayState" value="token" />
+
+                        </md-card-content>
+                        <md-card-actions layout="row" layout-align="end center">
+                            <md-button type="submit">Logon to Meraki</md-button>
+                        </md-card-actions>
+                    </md-card>
+                    </form>
+                </div>
+            </md-content>
+            <md-content class="md-padding" ng-if="tab.id == 2">
+                <p>Only Presence Analytics in here</p>
+            </md-content>
+        </md-tab>
+    </md-tabs>
+
+    <div flex="35"  layout="row" ng-hide="_orgservices.hasNoServices" layout-align="center">
+        <md-card class="md-padding">
+            <md-card-content>
+                <h3>You haven't set services for this organization.</h3>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="start center">
+                <md-button ng-click="_orgservices.manageServices($event)" class="md-raised md-primary">Manage Services</md-button>
+            </md-card-actions>
+        </md-card>
+    </div>
+
+
+</div>

@@ -7,6 +7,18 @@ html, body {
   background: #ffffff;
 
 }
+/***************
+ * TYPE DEFAULTS
+ ***************/
+a {
+  text-decoration: none;
+  font-weight: 400;
+  -webkit-transition: border-bottom 0.35s;
+  -moz-transition: border-bottom 0.35s;
+  -ms-transition: border-bottom 0.35s;
+  -o-transition: border-bottom 0.35s;
+  transition: border-bottom 0.35s;
+}
 
 /* Toolbar area */
 
@@ -100,4 +112,7 @@ span.name {
 }
 .md-toolbar-tools.gray{
   background-color: gray;
+}
+.org_list > p{
+  margin-left:10px;
 }

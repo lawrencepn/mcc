@@ -17,25 +17,32 @@
      */
 
     function UserFactory($q, $http, OAuth, authConstants, mccapi){
-
+        var route;
         return {
 
             getUser     : getUser,
             createUser  : createUser,
             currentUser : currentUser,
             getUsers    : getUsers,
-            deleteUser  : deleteUser
+            deleteUser  : deleteUser,
+            setRoles    : setRoles,
+            updateUser  : updateUser
 
         };
 
         function getUser(){
 
         };
-        function createUser(){
+        function createUser(payload){
+
+            route = 'user.user_add';
+
+            var promise = mccapi.callAPI(route, payload);
+            return promise;
 
         };
         function currentUser(request){
-            var route;
+
             if(request == "current"){
                 route = 'user.user_get';
             }
@@ -43,18 +50,30 @@
             return promise;
 
         };
-        function getUsers(type_id){
-            var route = 'users.users_path';
-            var data = {
-                msp_id: type_id
-            }
-            var promise = mccapi.callAPI(route, data);
+        function getUsers(payload){
+            route = 'users.users_path?' + payload;
+
+            var promise = mccapi.callAPI(route, {});
             return promise;
         };
 
-        function deleteUser(){
-
+        function deleteUser(userId){
+            route = 'user.user_delete.' + userId;
+            var promise = mccapi.callAPI(route, {});
+            return promise;
         };
+
+        function setRoles(payload, userId){
+            route = 'user.role_add.' + userId;
+            var promise = mccapi.callAPI(route, payload);
+            return promise;
+        };
+
+        function updateUser(userId, payload) {
+            route = 'user.user_update.' + userId;
+            var promise = mccapi.callAPI(route, payload);
+            return promise;
+        }
     }
 
 })();

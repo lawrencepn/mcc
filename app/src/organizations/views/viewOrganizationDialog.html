@@ -1,0 +1,24 @@
+<md-dialog id="viewOrg" flex="50" aria-label="{{self.org.name}}">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{self.org.name}}</h2>
+            <span flex></span>
+
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-padding">
+        <div layout="column">
+            <p>Created at: {{self.org.created_at}}</p>
+            <p>Updated at: {{self.org.updated_at}}</p>
+            <div>
+                No Services
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row" md-whiteframe="2">
+        <md-button ng-click="self.cancel()" md-autofocus>
+            Cancel
+        </md-button>
+        <span flex></span>
+    </md-dialog-actions>
+</md-dialog>

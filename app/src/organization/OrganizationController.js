@@ -23,16 +23,28 @@
         //get companies
         //get user
         //Show the organization menu
-        if($stateParams.organizationName !== 0 && $stateParams.positionIndex !== null){
-            var selectedIndex = $stateParams.positionIndex;
-            console.log($stateParams.positionIndex)
-            var orgsCache = Cachebox.get('organizations');
-            var mainController = $scope.$parent._main;
-            mainController.orgNotActive = false;
-            mainController.activeOrgName = orgsCache[selectedIndex].name;
+        try {
+            if ($stateParams.organizationName !== 0 && $stateParams.positionIndex !== null) {
+                var selectedIndex = $stateParams.positionIndex;
+                console.log($stateParams.positionIndex)
+                var orgsCache = Cachebox.get('organizations');
+                var mainController = $scope.$parent._main;
 
-        }else{
-            //go back to select an organization
+                var activeOrg = Cachebox.get('activeOrg');
+
+                if (activeOrg.name !== mainController.activeOrgName){
+                    //clear the active org cache
+                    Cachebox.remove('orgusers');
+                }
+
+                mainController.orgNotActive = false;
+                mainController.activeOrgName = orgsCache[selectedIndex].name;
+
+            } else {
+                //go back to select an organization
+            }
+        }catch(e){
+
         }
 
 

@@ -18,7 +18,7 @@
      */
 
     function OrganizationFactory($q, OAuth, mccapi){
-
+        var route;
         return {
 
             getOrganizations: getOrganizations,
@@ -27,7 +27,7 @@
 
         function getOrganizations(msp){
 
-            var route = 'organization.org_all';
+            route = 'organization.org_all';
             var data = {
                 msp_id: msp
             }
@@ -38,7 +38,7 @@
         }
 
         function addOrganization(orgDetails, msp){
-            var route = 'organization.org_add';
+            route = 'organization.org_add';
             var data = {
                 "organization": {
                     "msp_id":msp,
@@ -51,6 +51,7 @@
 
             return promise;
         }
+
     };
 
 })();

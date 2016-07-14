@@ -1,0 +1,63 @@
+<md-dialog id="manageServices" flex="50" ng-cloak aria-label="Manage Services">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Manage Services</h2>
+            <span flex></span>
+
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-padding">
+        <form name="merakiInfo" novalidate>
+            <div layout="column">
+                <md-list>
+                    <md-subheader class="md-no-sticky">Toggle Services</md-subheader>
+                    <md-list-item ng-repeat="item in self.services">
+                        <p>{{item.name}}</p>
+                        <md-checkbox class="md-secondary" ng-model="self.status[item.id]"></md-checkbox>
+                    </md-list-item>
+
+                </md-list>
+                <md-divider></md-divider>
+            </div>
+            <div id="saml">
+                <h3>SAML CONFIG</h3>
+                <h4>SAML Details</h4>
+                <p>Created : {{self.orgConf.created_at}}</p>
+                <p>URL : {{self.orgConf.saml_url}}</p>
+                <md-chips>
+                    <md-chip>{{self.orgConf.saml_cert_thumbprint}}</md-chip>
+                </md-chips>
+
+                <div ng-if="self.setMeraki == true" class="md-inline-form">
+                    <h4>Set Meraki Details For ORganization</h4>
+                        <div layout="row" flex>
+                            <md-input-container class="md-block" flex-gt-sm>
+                                <label>Meraki Org URL</label>
+                                <input type="url" name="merakiurl" ng-model="self.merakiConf.url" placeholder="http://">
+                            </md-input-container>
+                            <div flex="5" hide-xs hide-sm>
+                                <!-- Spacer //-->
+                            </div>
+                            <md-input-container class="md-block" flex-gt-sm>
+                                <label>Meraki Org ID</label>
+                                <input type="text" name="merakiid" ng-model="self.merakiConf.id" placeholder="24353">
+                            </md-input-container>
+                        </div>
+
+                </div>
+            </div>
+        </form>
+    </md-dialog-content>
+    <md-dialog-actions layout="row" md-whiteframe="2">
+        <md-button ng-click="self.cancel()" md-autofocus>
+            Cancel
+        </md-button>
+        <span flex></span>
+        <md-button type="submit" ng-click="self.saveChanges(self.status, self.merakiConf)" ng-disabled="false" md-autofocus>
+            Save Changes
+        </md-button>
+        <md-button type="submit" ng-click="self.close()" ng-disabled="self.changesSaved == false" md-autofocus>
+            Close
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

@@ -26,7 +26,7 @@
         //    self.orgNotActive = true;
         //}
 
-        self.mspName = self.mspName || "MSPNAME";
+        self.mspName = self.mspName || " ";
 
         self.close = function() {
             $mdSidenav('left').close();
@@ -66,28 +66,21 @@
 
         //TODO: append url with active org name
         //TODO:if org is selected, enable org menu
-
-        // get current user and organizations for the user
         User.currentUser('current')
             .then(function(response){
-
-                console.log(response);
+                console.log(response)
                 Cachebox.put('user', response.data)
                 self.localUser = response.data;
 
-                return Organization.getOrganizations(self.localUser.msp_id)
+                return MSP.getMSP(self.localUser.msp_id)
 
-            })
-            .then(function(response){
-
-
-                Cachebox.put('organizations', response.data);
-                self.organizationList = response.data;
-                //console.log(self.organizationList)
+            }).then(function(response){
+            console.log(response)
+                self.mspName = response.data.name;
 
             }).catch(function(e){
 
-        });
+            })
 
         //dashboard tabs
         /**

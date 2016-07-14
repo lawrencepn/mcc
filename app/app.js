@@ -13,6 +13,7 @@ angular
         'main',
         'user',
         'organization',
+        'services',
         'msp',
         'MCCAPI',
         'users',
@@ -20,17 +21,19 @@ angular
         'dashboard',
         'cachebox',
         'organizations',
-        'org'
+        'org',
+        'orgusers',
+        'orgservices'
 
     ])
-    .config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, OAuthProvider, OAuthTokenProvider){
+    .config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, OAuthProvider, OAuthTokenProvider, $sceDelegateProvider){
 
         $urlRouterProvider
             .otherwise( '/login' );
 
         OAuthProvider
             .configure({
-            baseUrl: 'http://api.mcctest.co.za/CloudCommandService',
+            baseUrl: 'https://api.mcctest.co.za/CloudCommandService',
             clientId: 'cloudcommandportal',
             clientSecret: '5da024ba44084b7e92b3702aa5e57ba2',
             grantPath: '/oauth/token',
@@ -55,6 +58,13 @@ angular
             .icon("phone"      , "./assets/svg/phone.svg"       , 512);
 
         $mdThemingProvider.theme('default')
+
+        $sceDelegateProvider.resourceUrlWhitelist([
+            // Allow same origin resource loads.
+            'self',
+            // Allow loading from our assets domain.  Notice the difference between * and **.
+            'https://*.meraki.com/saml/login/**'
+        ]);
 
 
     })

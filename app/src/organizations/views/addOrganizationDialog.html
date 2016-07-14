@@ -1,8 +1,7 @@
-<md-dialog id="addOrg" flex="35" aria-label="Add Company" ng-controller="AddOrgController as _addOrg">
-
+<md-dialog id="addOrg" flex="35" aria-label="Add Company">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Add Company</h2>
+                <h2>Add Organization</h2>
                 <span flex></span>
 
             </div>
@@ -29,14 +28,12 @@
 
         </md-dialog-content>
         <md-dialog-actions layout="row" md-whiteframe="2">
-            <md-button ng-click="_addOrg.cancel()" md-autofocus>
+            <md-button ng-click="self.cancel()" md-autofocus>
                 Cancel
             </md-button>
             <span flex></span>
-            <md-button ng-click="_addOrg.addOrg(neworg)">
+            <md-button ng-click="self.addOrg(neworg)">
                 Add
             </md-button>
         </md-dialog-actions>
-
-
 </md-dialog>

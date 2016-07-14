@@ -1,0 +1,53 @@
+<md-dialog id="addUser" flex="35" aria-label="Create User">
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Create Organization User</h2>
+            <span flex></span>
+
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <form name="createUser">
+            <div class="md-dialog-content">
+                <div layout="column">
+                    <md-input-container class="md-block">
+                        <label>Email</label>
+                        <input type="email" required name="userName" ng-model="newuser.email" >
+                        <div ng-messages="createUser.userName.$error" role="alert">
+                            <div ng-message="required">
+                                Email field cannot be empty.
+                            </div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container class="md-block">
+                        <label>Password</label>
+                        <input type="text" required name="userPassword" ng-model="newuser.password" >
+                        <div ng-messages="createUser.userName.$error" role="alert">
+                            <div ng-message="required">
+                                Password field cannot be empty.
+                            </div>
+                        </div>
+                    </md-input-container>
+                    <md-radio-group ng-model="newuser.userType">
+                        <md-radio-button value="user" class="md-primary">User</md-radio-button>
+                        <md-radio-button value="admin"> Admin </md-radio-button>
+                    </md-radio-group>
+
+                </div>
+            </div>
+        </form>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row" md-whiteframe="2">
+        <md-button ng-click="self.cancel()" md-autofocus>
+            Cancel
+        </md-button>
+        <span flex></span>
+        <md-button ng-click="self.addUser(newuser)">
+            Add
+        </md-button>
+    </md-dialog-actions>
+
+
+</md-dialog>

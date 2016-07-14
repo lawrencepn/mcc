@@ -30,15 +30,15 @@
                     <p>Users</p>
                 </md-list-item>
                 <md-subheader class="md-no-sticky">Organization Actions</md-subheader>
-                <md-list-item ng-click="activeCompany()" ng-disabled="_main.orgNotActive">
+                <md-list-item ng-click="_main.viewNavigate('orgservices')" ng-disabled="_main.orgNotActive">
                     <md-icon md-svg-icon="assets/svg/menu.svg"></md-icon>
                     <p>Services</p>
                 </md-list-item>
-                <md-list-item ng-click="activeCompany()" ng-disabled="_main.orgNotActive">
+                <md-list-item ng-click="_main.viewNavigate('orgtickets')" ng-disabled="_main.orgNotActive">
                     <md-icon md-svg-icon="assets/svg/menu.svg"></md-icon>
                     <p>Tickets</p>
                 </md-list-item>
-                <md-list-item ng-click="activeCompany()" ng-disabled="_main.orgNotActive">
+                <md-list-item ng-click="_main.viewNavigate('orgusers')" ng-disabled="_main.orgNotActive">
                     <md-icon md-svg-icon="assets/svg/menu.svg"></md-icon>
                     <p>Users</p>
                 </md-list-item>
@@ -67,7 +67,7 @@
                 </md-button>
             </div>
         </md-toolbar>
-        <md-content flex>
+        <md-content flex id="toastBounds">
             <div layout="column" layout-align="top" flex>
                 <ui-view></ui-view>
             </div>

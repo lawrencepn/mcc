@@ -5,7 +5,7 @@
     'use strict';
 
     angular.module('msp',[])
-        .factory('MSP', ['$q', 'OAuth', 'authConstants', MSPFactory]);
+        .factory('MSP', ['$q', 'OAuth', 'authConstants','mccapi', MSPFactory]);
 
     /**
      * Users DataService
@@ -16,17 +16,19 @@
      * @constructor
      */
 
-    function MSPFactory($q, OAuth, authConstants){
-
+    function MSPFactory($q, OAuth, authConstants, mccapi){
+        var route;
         return {
 
             getMSP : getMSP
 
         };
 
-        function getMSP(){
+        function getMSP(msp_id){
+            route = 'msps.msp_path.' + msp_id;
 
-
+            var promise = mccapi.callAPI(route, {});
+            return promise;
 
         };
     }
