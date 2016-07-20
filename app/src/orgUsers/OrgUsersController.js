@@ -22,6 +22,10 @@
         self.orgId = null;
         self.addUser = addUser;
 
+        var _mainController = $scope.$parent._main;
+        //show the org selector
+        _mainController.canToggleOrg = true;
+
         try {
 
             var activeOrg = Cachebox.get('activeOrg');
@@ -35,7 +39,7 @@
         }
         //get selected organization users
         var localUser = Cachebox.get('user');
-
+console.log(Cachebox.get('orgusers'))
         if (Cachebox.get('orgusers') != undefined) {
 
             self.orgUserList = Cachebox.get('orgusers');

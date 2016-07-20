@@ -24,6 +24,10 @@
         self.deleteUser = deleteUser;
         self.noUsers = false;
 
+        var _mainController = $scope.$parent._main;
+        //show the org selector
+        _mainController.canToggleOrg = false;
+
         var localUser = Cachebox.get('user');
 
         if (Cachebox.get('mspusers') != undefined) {
@@ -70,6 +74,50 @@
             }).catch(function (e) {
 
             console.log(e)
+            })
+        }
+
+        function createUser(details) {
+            //msp user
+            //can create a admin
+            //can create a user
+            //for should specifiy user type
+            //pass: user-type, mspuser, msp_id
+            //{"roles" : [{"name": "admin", "resource_type": "msp", "resource_id": 4}] }
+            var rolesPayload;
+
+            var userType = details.userType;
+            var userPayload = {
+                user: {
+                    msp_id: localUser.msp_id,
+                    email: details.email,
+                    password: details.password
+                }
+            }
+
+            User.createUser(userPayload)
+
+                .then(function (response) {
+                    console.log(response)
+                    rolesPayload = {
+                        roles: [
+                            {
+                                name: userType,
+                                resource_type: 'msp',
+                                resource_id: localUser.msp_id
+                            }
+                        ]
+                    }
+                    //update ui list
+                    self.mspUserList.push(response.data)
+                    //set role for the user
+                    return User.setRoles(rolesPayload, response.data.id)
+
+                }).then(function (response) {
+
+                console.log(response)
+
+            }).catch(function (e) {
             })
         }
 
@@ -144,63 +192,20 @@
 
         }
 
-        function createUser(details) {
-            //msp user
-            //can create a admin
-            //can create a user
-            //for should specifiy user type
-            //pass: user-type, mspuser, msp_id
-            //{"roles" : [{"name": "admin", "resource_type": "msp", "resource_id": 4}] }
-            var rolesPayload;
 
-            var userType = details.userType;
-            var userPayload = {
-                user: {
-                    msp_id: localUser.msp_id,
-                    email: details.email,
-                    password: details.password
-                }
-            }
-          
-            User.createUser(userPayload)
 
-                .then(function (response) {
-                    console.log(response)
-                    //self.mspUserList.push(response.data);
-                    rolesPayload = {
-                        roles: [
-                            {
-                                name: userType,
-                                resource_type: 'msp',
-                                resource_id: localUser.msp_id
-                            }
-                        ]
-                    }
-                    //update ui list
-                    self.mspUserList.push(response.data)
-                    //set role for the user
-                    return User.setRoles(rolesPayload, response.data.id)
-
-                }).then(function (response) {
-
-                console.log(response)
-
-                }).catch(function (e) {
-            })
-        }
-
-        function AddUserController( $scope, $mdDialog, user) {
+        function AddUserController( $scope, $mdDialog) {
 
             var self = this;
-            console.log(user)
-            self.user = user;
-            if(user.hasOwnProperty('roles')) {
-                var o = user.roles;
-                if(o.length > 0){
-                    self.userRole = user.roles[0].name;
-                }
 
-            }
+            // self.user = user;
+            // if(user.hasOwnProperty('roles')) {
+            //     var o = user.roles;
+            //     if(o.length > 0){
+            //         self.userRole = user.roles[0].name;
+            //     }
+            //
+            // }
 
             self.cancel = function () {
                 $mdDialog.hide();

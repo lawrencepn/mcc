@@ -9,10 +9,9 @@
         .config(function($stateProvider){
             $stateProvider.state('main', {
                 abstract:true,
-                url: '/main',
                 templateUrl:'src/main/view/main.html',
                 controller: 'MainController',
-                controllerAs:'_main'
+                controllerAs : '_main'
             })
         })
 

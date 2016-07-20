@@ -15,6 +15,7 @@
                     <md-card class="md-padding">
                         <md-card-content>
                             <h3>Looks like you don't have any organizations.</h3>
+
                         </md-card-content>
                         <md-card-actions layout="row" layout-align="start center">
                             <md-button ng-click="_organizations.addOrganization()" class="md-raised md-primary">Create Organization</md-button>
@@ -26,7 +27,15 @@
 
                             <p>{{item.name}}</p>
 
-                            <md-button ng-click="_organizations.viewOrg(item, $index, $event)">View</md-button>
+                            <md-button aria-label="Users" class="md-icon-button">
+                                <md-icon md-font-set="material-icons"> people </md-icon>
+                            </md-button>
+                            <md-button aria-label="Services" class="md-icon-button">
+                                <md-icon md-font-set="material-icons"> settings_input_component </md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" ng-click="_organizations.viewOrg(item, $index, $event)">
+                                <md-icon md-font-set="material-icons"> info_outline </md-icon>
+                            </md-button>
                             <md-button ng-click="_organizations.switchToOrg(item.name, $index)">Switch</md-button>
 
                         <md-divider ng-if="!$last"></md-divider>

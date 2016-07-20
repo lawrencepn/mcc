@@ -25,6 +25,10 @@
         self.hasSML = false;
         var updatedServices = [];
 
+        var _mainController = $scope.$parent._main;
+        //show the org selector
+        _mainController.canToggleOrg = true;
+
         //get org 
         try {
             var localUser = Cachebox.get('user');
@@ -99,7 +103,6 @@
 
             })
                 .then(function (res) {
-
                     var changesExist = false;
 
                     if (res !== undefined) {
@@ -108,7 +111,6 @@
                             res.forEach(function (value, arr) {
                                 //if its not there is current services, add it
                                return self.services.forEach(function (xvalue, xarr) {
-
                                         if (value == xvalue.id) {
                                             changesExist = true
                                             return;
@@ -123,11 +125,13 @@
                                     assignNewServices(res)
                                 }
                             }, 300)
+                        }else{
+                            assignNewServices(res)
                         }
                     }
 
                 }).catch(function (e) {
-
+                    console.log(e)
             })
         }
 
@@ -142,6 +146,7 @@
             Services.set(self.orgId, payload)
 
                 .then(function(res){
+                    console.log(res)
                     //update active services, tabs need to update
                     self.services = [];
                     self.services = res.data;
@@ -150,7 +155,7 @@
                     self.hasNoServices = true;
 
                 }).catch(function(e){
-
+                    console.log(e)
             })
         }
         

@@ -1,11 +1,11 @@
 /**
  * Created by lawrencenyakiso on 2016/06/11.
  */
-(function(){
+(function () {
 
     angular
         .module('main')
-        .controller('MainController', ['OAuth','$state','$mdSidenav','User','Organization','MSP','Cachebox','$timeout','$mdDialog', MainController])
+        .controller('MainController', ['$scope', '$state', '$mdSidenav', 'User', 'Organization', 'MSP', 'Cachebox', '$timeout', '$mdDialog', MainController])
 
 
     /**
@@ -15,12 +15,17 @@
      * @param avatarsService
      * @constructor
      */
-    function MainController( OAuth , $state, $mdSidenav, User, Organization, MSP, Cachebox, $timeout, $mdDialog) {
+    function MainController($scope, $state, $mdSidenav, User, Organization, MSP, Cachebox, $timeout, $mdDialog) {
         var self = this;
 
         //delegate to children
         self.orgNotActive = true;
         self.activeOrgName = null;
+        self.activeOrg = null;
+        self.organizationList = [];
+        self.orgs = null;
+        self.canToggleOrg = false;
+        var localUser;
 
         //if(!self.orgNotActive){
         //    self.orgNotActive = true;
@@ -28,59 +33,63 @@
 
         self.mspName = self.mspName || " ";
 
-        self.close = function() {
+        self.close = function () {
             $mdSidenav('left').close();
         };
-        self.openLeft = function() {
+        self.openLeft = function () {
             $mdSidenav('left').open();
         };
 
-        self.demolist = [
-            {name:'VODACOM'},
-            {name:'MTN'}
-        ];
 
-        self.demoData = [
-            {
-                calls: '120',
-            },
-            {
-                tickets:'300'
-            },
-            {
-                data:'200'
-            }
-        ]
-
-
-        self.localUser;
-        self.organizationList = [];
-        self.orgs = null;
 
         //side menu navigation
-        self.viewNavigate = function(viewName){
+        self.viewNavigate = function (viewName) {
             //switch dashboard view
-            $state.go('main.'+ viewName);
+            $state.go('main.' + viewName);
         }
 
 
         //TODO: append url with active org name
         //TODO:if org is selected, enable org menu
         User.currentUser('current')
-            .then(function(response){
+            .then(function (response) {
                 console.log(response)
                 Cachebox.put('user', response.data)
-                self.localUser = response.data;
+                localUser = response.data;
 
-                return MSP.getMSP(self.localUser.msp_id)
+                return MSP.getMSP(localUser.msp_id)
 
-            }).then(function(response){
+            }).then(function (response) {
             console.log(response)
-                self.mspName = response.data.name;
+            self.mspName = response.data.name;
 
-            }).catch(function(e){
+        }).catch(function (e) {
 
-            })
+        })
+
+        //watch for changes in activeOrg Values.
+        $scope.$watch(angular.bind(this, function () {
+            return this.activeOrg;
+        }), function (newVal, oldVal) {
+
+            if (oldVal !== newVal) {
+                var currentState = $state.$current.name;
+                Cachebox.put('activeOrg', self.organizationList[newVal]);
+
+                if (currentState == 'main.orgservices') {
+
+                } else if (currentState == 'main.orgusers') {
+                    //empty the org user cachebox
+                    Cachebox.remove('orgusers');
+
+                }
+
+                $state.reload(currentState)
+            }
+
+            //update child view and pass whats needed:
+            //child views: org-users, org-services
+        })
 
         //dashboard tabs
         /**

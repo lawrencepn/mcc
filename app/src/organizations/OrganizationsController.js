@@ -5,7 +5,7 @@
     'use strict';
     angular
         .module('organizations')
-        .controller('OrganizationsController', [ '$scope', '$mdSidenav','User','Organization','MSP','Cachebox','OAuth','$mdDialog','$state', OrganizationsController])
+        .controller('OrganizationsController', [ '$scope', '$mdSidenav','User','Organization','MSP','Cachebox','Services','$mdDialog','$state', OrganizationsController])
         //.controller('AddOrgController', ['$mdDialog', AddOrgController]);
     /**
      * Main Controller
@@ -14,7 +14,7 @@
      * @param avatarsService
      * @constructor
      */
-    function OrganizationsController( $scope, $mdSidenav, User, Organization, MSP, Cachebox, OAuth, $mdDialog, $state ) {
+    function OrganizationsController( $scope, $mdSidenav, User, Organization, MSP, Cachebox, Services, $mdDialog, $state ) {
         var self = this;
         self.organizationList = [];
         self.addOrganizationContainer = false;
@@ -23,14 +23,22 @@
         self.viewOrg = viewOrg;
         self.addOrganization = addOrganization;
 
+
         //if we are here, we assume token is valid
+        var _mainController = $scope.$parent._main;
+        //show the org selector
+        _mainController.canToggleOrg = false;
+
         var localUser = Cachebox.get('user');
 
         if(Cachebox.get('organizations') != undefined){
+
             self.organizationList = Cachebox.get('organizations');
+
             if(self.organizationList.length == 0){
                 self.noOrgs = true;
             }
+
         }else{
 
 
@@ -40,13 +48,13 @@
 
                     Cachebox.put('organizations', response.data);
                     self.organizationList = response.data;
+                    _mainController.organizationList = self.organizationList;
 
                     //if there are no organizations, show add organization container
                     if(response.data.length == 0){
                         self.addOrganizationContainer = true;
                     }
-
-                    console.log(self.organizationList);
+                    
 
                     if(self.organizationList.length == 0){
                         self.noOrgs = true;
@@ -107,6 +115,17 @@
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 clickOutsideToClose:true,
+                resolve : {
+                    services : function(){
+                        return Services.getOrg(org.id)
+                            .then(function (res) {
+                                return res.data;
+
+                            }).catch(function (e) {
+
+                            })
+                    }
+                },
                 locals : {
                     org : org
                 }
@@ -118,6 +137,7 @@
                 console.log(e)
             })
         }
+
 
         function AddOrgController($mdDialog){
             var self = this;
@@ -132,8 +152,10 @@
             }
         }
 
-        function ViewOrgController($mdDialog, org){
+        function ViewOrgController($mdDialog, services, org){
             var self = this;
+            self.services = services;
+
             self.org = org;
             self.cancel = function(){
                 $mdDialog.hide();

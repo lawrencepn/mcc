@@ -1,4 +1,4 @@
-<md-dialog id="viewOrg" flex="50" aria-label="{{self.org.name}}">
+<md-dialog id="viewOrg" flex="40" aria-label="{{self.org.name}}">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>{{self.org.name}}</h2>
@@ -8,10 +8,18 @@
     </md-toolbar>
     <md-dialog-content class="md-padding">
         <div layout="column">
+            <h3>Organization Summary</h3>
             <p>Created at: {{self.org.created_at}}</p>
             <p>Updated at: {{self.org.updated_at}}</p>
+            <md-divider></md-divider>
             <div>
-                No Services
+            <h4>Services</h4>
+                <md-chips
+                        name="servicesName"
+                        ng-model="self.services"
+                        readonly="true">
+                    <md-chip-template>{{$chip.name}}</md-chip-template>
+                </md-chips>
             </div>
         </div>
     </md-dialog-content>
