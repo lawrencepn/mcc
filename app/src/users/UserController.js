@@ -78,20 +78,16 @@
         }
 
         function createUser(details) {
-            //msp user
-            //can create a admin
-            //can create a user
-            //for should specifiy user type
-            //pass: user-type, mspuser, msp_id
-            //{"roles" : [{"name": "admin", "resource_type": "msp", "resource_id": 4}] }
+
             var rolesPayload;
+            var msp = Cachebox.get('msp');
+            var user = {};
 
             var userType = details.userType;
             var userPayload = {
                 user: {
                     msp_id: localUser.msp_id,
-                    email: details.email,
-                    password: details.password
+                    email: details.email
                 }
             }
 
@@ -110,16 +106,36 @@
                     }
                     //update ui list
                     self.mspUserList.push(response.data)
-                    //set role for the user
+
+                    user['token'] = response.data.confirmation_token;
+                    user['email'] = response.data.email;
+                    user['msp_id']= response.data.msp_id;
+                    //set role for the user - role fo this user us
                     return User.setRoles(rolesPayload, response.data.id)
 
                 }).then(function (response) {
 
+                    //user has been created, and user role has been set
+                //what we need [msp_id, confirmtoken]
+                var payload = {
+                    token       : user.token,
+                    email       : user.email,
+                    msp         : user.msp_id,
+                    msp_domain  : msp.url_host
+                }
+
+                return User.notify(payload)
+
+            }).then(function(response){
+
                 console.log(response)
 
             }).catch(function (e) {
+                console.log(e)
             })
         }
+
+
 
         function viewUser() {
 
@@ -197,7 +213,10 @@
         function AddUserController( $scope, $mdDialog) {
 
             var self = this;
-
+            self.userType = {
+                user : 'user',
+                admin: 'admin'
+            }
             // self.user = user;
             // if(user.hasOwnProperty('roles')) {
             //     var o = user.roles;
@@ -211,7 +230,11 @@
                 $mdDialog.hide();
             };
 
-            self.addUser = function (userDetails) {
+            self.addUser = function (email, userType) {
+                var userDetails = {
+                    email: email,
+                    userType : userType
+                }
                 $mdDialog.hide(userDetails);
             };
 

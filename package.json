@@ -10,9 +10,9 @@
       "url": "https://github.com/angular/material/blob/master/LICENSE"
     }
   ],
-  "peerDependencies": {
-  },
+  "peerDependencies": {},
   "dependencies": {
+    "express": "^4.14.0"
   },
   "devDependencies": {
     "angular-mocks": "^1.5.6",
@@ -46,6 +46,6 @@
   },
   "scripts": {
     "prestart": "npm update",
-    "test" : "karma start karma.conf.js"
+    "test": "karma start karma.conf.js"
   }
 }

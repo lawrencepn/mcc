@@ -23,10 +23,11 @@ angular
         'organizations',
         'org',
         'orgusers',
-        'orgservices'
+        'orgservices',
+        'confirm'
 
     ])
-    .config(function($mdThemingProvider, $urlRouterProvider, OAuthProvider, OAuthTokenProvider, $sceDelegateProvider){
+    .config(function($mdThemingProvider, $urlRouterProvider, OAuthProvider, OAuthTokenProvider, $sceDelegateProvider, $httpProvider){
 
         $urlRouterProvider
             .otherwise( '/login' );
@@ -54,9 +55,14 @@ angular
             // Allow same origin resource loads.
             'self',
             // Allow loading from our assets domain.  Notice the difference between * and **.
-            'https://*.meraki.com/saml/login/**'
+            'https://*.meraki.com/saml/login/**',
+            'http://localhost:4000/*'
         ]);
 
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+        $httpProvider.defaults.headers.common.Accept = 'application/json;charset=UTF-8';
+        $httpProvider.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8';
 
     })
     .run(function($rootScope, $window, OAuth){

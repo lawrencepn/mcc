@@ -13,27 +13,17 @@
                 <div layout="column">
                     <md-input-container class="md-block">
                         <label>Email</label>
-                        <input type="email" required name="userName" ng-model="newuser.email" >
+                        <input type="email" required name="userName" ng-model="email" >
                         <div ng-messages="createUser.userName.$error" role="alert">
                             <div ng-message="required">
                                 Email field cannot be empty.
                             </div>
                         </div>
                     </md-input-container>
-                    <md-input-container class="md-block">
-                        <label>Password</label>
-                        <input type="text" required name="userPassword" ng-model="newuser.password" >
-                        <div ng-messages="createUser.userName.$error" role="alert">
-                            <div ng-message="required">
-                                Password field cannot be empty.
-                            </div>
-                        </div>
-                    </md-input-container>
-                    <md-radio-group ng-model="newuser.userType">
+                    <md-radio-group ng-model="self.userType.user">
                         <md-radio-button value="user" class="md-primary">User</md-radio-button>
                         <md-radio-button value="admin"> Admin </md-radio-button>
                     </md-radio-group>
-
                 </div>
             </div>
         </form>
@@ -43,7 +33,7 @@
             Cancel
         </md-button>
         <span flex></span>
-        <md-button ng-click="self.addUser(newuser)">
+        <md-button ng-click="self.addUser(email, self.userType.user)">
             Add
         </md-button>
     </md-dialog-actions>

@@ -3,7 +3,7 @@
             class="md-sidenav-left md-whiteframe-z2"
             md-component-id="left"
             md-is-locked-open="$mdMedia('gt-sm')"
-            md-disable-backdrop=true
+            md-disable-backdrop
             md-whiteframe="4">
 
         <md-toolbar class="md-theme-indigo">
@@ -13,22 +13,23 @@
         <md-content layout="column">
 
             <md-list>
-                <md-subheader class="md-no-sticky">Overview</md-subheader>
-                <md-list-item ng-click="_main.viewNavigate('dashboard')">
-                    <md-icon md-font-set="material-icons">dashboard</md-icon>
-                    <p>Dashboard</p>
+                <div ng-if="_main.orgUser">
+                    <md-subheader class="md-no-sticky">Overview</md-subheader>
+                    <md-list-item ng-click="_main.viewNavigate('dashboard')">
+                        <md-icon md-font-set="material-icons">dashboard</md-icon>
+                        <p>Dashboard</p>
+                    </md-list-item>
+                    <md-divider></md-divider>
+                    <md-subheader class="md-no-sticky">MSP Actions</md-subheader>
+                    <md-list-item ng-click="_main.viewNavigate('organizations')">
+                        <md-icon md-font-set="material-icons">work</md-icon>
+                        <p>Organizations</p>
+                    </md-list-item>
+                    <md-list-item ng-click="_main.viewNavigate('users')">
+                        <md-icon md-font-set="material-icons">assignment_ind</md-icon>
+                        <p>Users</p>
                 </md-list-item>
-                <md-divider></md-divider>
-                <md-divider></md-divider>
-                <md-subheader class="md-no-sticky">MSP Actions</md-subheader>
-                <md-list-item ng-click="_main.viewNavigate('organizations')">
-                    <md-icon md-font-set="material-icons">work</md-icon>
-                    <p>Organizations</p>
-                </md-list-item>
-                <md-list-item ng-click="_main.viewNavigate('users')">
-                    <md-icon md-font-set="material-icons">assignment_ind</md-icon>
-                    <p>Users</p>
-                </md-list-item>
+                </div>
                 <md-subheader class="md-no-sticky">Organization Actions</md-subheader>
                 <md-list-item ng-click="_main.viewNavigate('orgservices')" ng-disabled="_main.orgNotActive">
                     <md-icon md-font-set="material-icons">settings_input_component</md-icon>
@@ -41,6 +42,10 @@
                 <md-list-item ng-click="_main.viewNavigate('orgusers')" ng-disabled="_main.orgNotActive">
                     <md-icon md-font-set="material-icons">people</md-icon>
                     <p>Users</p>
+                </md-list-item>
+                <md-list-item ng-click="_main.viewNavigate('orgusers')" ng-disabled="_main.orgNotActive">
+                    <md-icon md-font-set="material-icons">people</md-icon>
+                    <p>Organization Settings</p>
                 </md-list-item>
 
             </md-list>

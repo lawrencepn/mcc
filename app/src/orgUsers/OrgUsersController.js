@@ -91,13 +91,14 @@ console.log(Cachebox.get('orgusers'))
         function createUser(details) {
 
             var rolesPayload;
+            var msp = Cachebox.get('msp');
+            var user = {};
 
             var userType = details.userType;
             var userPayload = {
                 user: {
                     msp_id: localUser.msp_id,
                     email: details.email,
-                    password: details.password
                 }
             }
 
@@ -117,13 +118,32 @@ console.log(Cachebox.get('orgusers'))
                     }
                     //update ui list
                     self.orgUserList.push(response.data)
+
+                    user['token'] = response.data.confirmation_token;
+                    user['email'] = response.data.email;
+                    user['msp_id']= response.data.msp_id;
                     //set role for the user
                     return User.setRoles(rolesPayload, response.data.id)
 
                 }).then(function (response) {
+
                     self.noUsers = false;
-                
-            }).catch(function (e) {})
+                    var payload = {
+                        token       : user.token,
+                        email       : user.email,
+                        msp         : user.msp_id,
+                        msp_domain  : msp.url_host
+                    }
+                //notify user
+                return User.notify(payload)
+
+            }).then(function(response){
+
+                console.log(response)
+
+            }).catch(function (e) {
+
+            })
         }
 
         function AddUserController( $scope, $mdDialog) {

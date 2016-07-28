@@ -23,7 +23,8 @@
                     user_pswdr  : 'request_reset_password',
                     user_add    : 'users',
                     user_delete : 'users',
-                    user_update : 'users'
+                    user_update : 'users',
+                    user_confirm: 'confirm_user'
 
                 },
                 msps : {
@@ -80,7 +81,7 @@
 
             //if path variable has key words [add, request, create]
             //change method to POST
-            if(sd[1].indexOf('add') !== -1){
+            if(sd[1].indexOf('add') !== -1 || sd[1].indexOf('confirm') !== -1){
                 method = 'POST';
             }
 

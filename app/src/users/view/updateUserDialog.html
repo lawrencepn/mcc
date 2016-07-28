@@ -15,12 +15,6 @@
                         <label>Email</label>
                         <input type="email" name="userName" value="{{self.user.email}}" ng-disabled="true" >
                     </md-input-container>
-
-                    <md-input-container class="md-block">
-                        <label>Password</label>
-                        <input type="text" name="userPassword" ng-model="password" >
-                    </md-input-container>
-
                     <md-radio-group ng-model="self.userRole">
                         <md-radio-button value="user" class="md-primary">User</md-radio-button>
                         <md-radio-button value="admin"> Admin </md-radio-button>

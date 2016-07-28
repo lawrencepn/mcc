@@ -25,6 +25,7 @@
         self.organizationList = [];
         self.orgs = null;
         self.canToggleOrg = false;
+        self.orgUser = true;
         var localUser;
 
         //if(!self.orgNotActive){
@@ -39,8 +40,6 @@
         self.openLeft = function () {
             $mdSidenav('left').open();
         };
-
-
 
         //side menu navigation
         self.viewNavigate = function (viewName) {
@@ -57,15 +56,26 @@
                 Cachebox.put('user', response.data)
                 localUser = response.data;
 
+                //user type
+                if(response.data.roles !== null){
+                    if(response.data.roles[0].resource_type === 'Organization'){
+                        self.orgUser = false;
+                    }
+                }
+
                 return MSP.getMSP(localUser.msp_id)
 
             }).then(function (response) {
-            console.log(response)
+
+            Cachebox.put('msp', response.data);
             self.mspName = response.data.name;
 
         }).catch(function (e) {
 
         })
+
+        //get the msp details
+        MSP
 
         //watch for changes in activeOrg Values.
         $scope.$watch(angular.bind(this, function () {

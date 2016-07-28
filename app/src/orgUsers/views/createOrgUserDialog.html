@@ -20,15 +20,6 @@
                             </div>
                         </div>
                     </md-input-container>
-                    <md-input-container class="md-block">
-                        <label>Password</label>
-                        <input type="text" required name="userPassword" ng-model="newuser.password" >
-                        <div ng-messages="createUser.userName.$error" role="alert">
-                            <div ng-message="required">
-                                Password field cannot be empty.
-                            </div>
-                        </div>
-                    </md-input-container>
                     <md-radio-group ng-model="newuser.userType">
                         <md-radio-button value="user" class="md-primary">User</md-radio-button>
                         <md-radio-button value="admin"> Admin </md-radio-button>
@@ -37,7 +28,6 @@
                 </div>
             </div>
         </form>
-
     </md-dialog-content>
     <md-dialog-actions layout="row" md-whiteframe="2">
         <md-button ng-click="self.cancel()" md-autofocus>

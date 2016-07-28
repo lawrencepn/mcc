@@ -26,7 +26,9 @@
             getUsers    : getUsers,
             deleteUser  : deleteUser,
             setRoles    : setRoles,
-            updateUser  : updateUser
+            updateUser  : updateUser,
+            confirm     : confirmUser,
+            notify      : notifynewUser
 
         };
 
@@ -73,6 +75,23 @@
             route = 'user.user_update.' + userId;
             var promise = mccapi.callAPI(route, payload);
             return promise;
+        }
+
+        function confirmUser(payload){
+            route = 'user.user_confirm';
+            var promise = mccapi.callAPI(route, payload);
+            return promise;
+        }
+
+        function notifynewUser(payload){
+            var url = 'http://localhost:4000/smtp';
+
+            return $http({
+                method: "POST",
+                url: url,
+                data :payload
+            })
+
         }
     }
 

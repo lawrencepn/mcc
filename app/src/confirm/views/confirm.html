@@ -1,10 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<div layout="row" layout-align="center">
+    <div layout="column" flex-xs="100" flex-sm="90" flex-md="33" flex-lg="33" >
+        <div flex class="login_logo" hide-xs hide-sm>
+            <img src="assets/img/mcc_logo.png" alt="My Cloud Central">
+        </div>
+        <div flex class="login_logo_sm" hide-md hide-lg >
+            <img src="assets/img/mcc_logo.png" alt="My Cloud Central">
+        </div>
+        <md-content layout-padding ng-switch="_confirm.gotoLogin">
+        <div flex  ng-switch-when="false">
+            <md-card class="md-padding">
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">Set a new password</span>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                    <form name="confirmForm" novalidate>
+                        <md-input-container class="md-block">
+                            <label>Password</label>
+                            <input required type="password" name="userPassword" ng-model="confirmForm.password">
+                            <div ng-messages="confirmForm.userPassword.$error" role="alert">
+                                <div ng-message="required">
+                                    Password field cannot be empty
+                                </div>
+                            </div>
+
+                        </md-input-container>
+                    </form>
+                    <div class="formError" ng-show="_confirm.confirmError">
+                        <h5>Invalid Confirmation Token</h5>
+                        <p>Contact your administrator for assistance.</p>
+                    </div>
+
+                </md-card-content>
+                <md-card-actions class="md-padding-half" layout="row" layout-align="start center">
+                    <md-button class="md-raised md-primary" type="submit" ng-disabled="confirmForm.$invalid" ng-click="_confirm.confirmUser(confirmForm)">Confirm</md-button>
+                </md-card-actions>
+            </md-card>
+        </div>
+        <div flex ng-switch-when="true" layout="row" layout-align="center">
+            <h3>Done! Your account is ready for use.</h3>
+            <md-button class="md-raised md-primary"  ui-sref="login">Go to login</md-button>
+        </div>
+        </md-content>
+    </div>
+</div>
