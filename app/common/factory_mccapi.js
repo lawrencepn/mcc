@@ -8,7 +8,7 @@
         .factory('mccapi',[ '$q', '$http','api_vars','OAuthToken', MCCFactory ])
 
         .constant('api_vars', {
-            host:"http://api.mcctest.co.za/",
+            host:"https://api.mcctest.co.za/",
             path:"CloudCommandService/api/",
             version:"v1",
             routes: {
