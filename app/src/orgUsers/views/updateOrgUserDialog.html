@@ -1,0 +1,73 @@
+<md-dialog id="updateOrgUser" flex="50" aria-label="Update User">
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Update Org User</h2>
+            <span flex></span>
+
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+
+        <div layout="column" layout-align="center center" ng-if="self.busy">
+            <md-progress-circular md-diameter="96"></md-progress-circular>
+        </div>
+        <div class="md-dialog-content" ng-if="!self.busy">
+            <form  name="updateUser" ng-if="self.confirm">
+
+                <div layout="row">
+                    <div flex="50">
+                        <h3>Update user email and user role</h3>
+                        <md-input-container class="md-block">
+                            <label>Email</label>
+                            <input type="email" name="userName" value="{{self.user.email}}" ng-disabled="true" >
+                        </md-input-container>
+                    </div>
+                    <div flex="5"></div>
+                    <div flex>
+                        <h4>Organization Role</h4>
+                        <md-radio-group ng-model="self.userRole" layout="row">
+                            <md-radio-button value="user" class="md-primary">User</md-radio-button>
+                            <md-radio-button value="admin"> Admin </md-radio-button>
+                        </md-radio-group>
+                    </div>
+                    <div flex="15">
+                        <md-button ng-click="" ng-disabled="!self.notconfirmed" class="md-icon-button" ng-class="{'md-warn': self.notconfirmed, 'user-confirmed' : !self.notconfirmed}">
+                            <md-icon md-font-set="material-icons">verified_user</md-icon>
+                        </md-button>
+                        <md-button ng-click="self.resetUserPassword()" class="md-icon-button">
+                            <md-icon md-font-set="material-icons">link</md-icon>
+                        </md-button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <div ng-if="!self.confirm" layout="column" layout-align="center center">
+            <h3>Are you sure?</h3>
+        </div>
+
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row" md-whiteframe="2">
+        <md-button ng-if="self.confirm" ng-click="self.cancel()" md-autofocus>
+            Cancel
+        </md-button>
+        <md-button ng-if="!self.confirm" ng-click="self.cancelDelete()" md-autofocus>
+            Cancel Delete
+        </md-button>
+        <span flex></span>
+        <md-button ng-if="self.confirm" class="md-raised md-primary" ng-click="self.updateUser(self.userRole)">
+            Update
+        </md-button>
+        <md-button ng-if="self.confirm" class="md-raised md-warn" ng-click="self.deleteUser()">
+            Delete User
+        </md-button>
+        <md-button ng-if="!self.confirm" class="md-raised md-warn" ng-click="self.deleteUserConfirmed()">
+            Confirm Delete
+        </md-button>
+    </md-dialog-actions>
+
+</md-dialog>

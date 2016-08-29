@@ -6,20 +6,29 @@
             md-disable-backdrop
             md-whiteframe="4">
 
-        <md-toolbar class="md-theme-indigo">
+        <md-toolbar class="md-theme-indigo" layout="row">
             <h1 class="md-toolbar-tools">Menu</h1>
+            <div class="md-toolbar-tools">
+
+                <span flex></span>
+                <md-button class="md-icon-button">
+                    <md-icon md-font-set="material-icons" ng-click="_main.logout()">power_settings_new</md-icon>
+                </md-button>
+
+            </div>
         </md-toolbar>
 
         <md-content layout="column">
 
             <md-list>
-                <div ng-if="_main.orgUser">
+
                     <md-subheader class="md-no-sticky">Overview</md-subheader>
                     <md-list-item ng-click="_main.viewNavigate('dashboard')">
                         <md-icon md-font-set="material-icons">dashboard</md-icon>
                         <p>Dashboard</p>
                     </md-list-item>
                     <md-divider></md-divider>
+                <div ng-if="_main.orgUser">
                     <md-subheader class="md-no-sticky">MSP Actions</md-subheader>
                     <md-list-item ng-click="_main.viewNavigate('organizations')">
                         <md-icon md-font-set="material-icons">work</md-icon>
@@ -34,10 +43,6 @@
                 <md-list-item ng-click="_main.viewNavigate('orgservices')" ng-disabled="_main.orgNotActive">
                     <md-icon md-font-set="material-icons">settings_input_component</md-icon>
                     <p>Services</p>
-                </md-list-item>
-                <md-list-item ng-click="_main.viewNavigate('orgtickets')" ng-disabled="_main.orgNotActive">
-                    <md-icon md-font-set="material-icons">bug_report</md-icon>
-                    <p>Tickets</p>
                 </md-list-item>
                 <md-list-item ng-click="_main.viewNavigate('orgusers')" ng-disabled="_main.orgNotActive">
                     <md-icon md-font-set="material-icons">people</md-icon>

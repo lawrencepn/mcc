@@ -23,6 +23,9 @@
         self.hasNoServices = true;
         self.samlData = {};
         self.hasSML = false;
+        self.activeUserRole = null;
+
+
         var updatedServices = [];
 
         var _mainController = $scope.$parent._main;
@@ -33,10 +36,29 @@
         try {
             var localUser = Cachebox.get('user');
             var activeOrg = Cachebox.get('activeOrg');
-            self.orgId = activeOrg.id;
+            if(activeOrg !== undefined){
+                self.orgId = activeOrg.id;
+            }else{
+                self.orgId = localUser.roles[0].resource_id
+            }
+
+            //permissions
+            if(localUser.roles[0].resource_type !== 'Msp'){
+                localUser.roles.forEach(function (hash, index, array) {
+                    if(hash.resource_id === activeOrg.id){
+                        self.activeUserRole = hash.name;
+                        return;
+                    }
+                })
+
+            }else{
+                //user is an msp
+                self.activeUserRole = 'admin';
+            }
             
         }catch (e){
             //TODO:catch errors
+            console.log(e)
             
         }
         
@@ -82,20 +104,6 @@
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 clickOutsideToClose: true,
-                resolve : {
-                    services : function(){
-                       return Services.getMSP()
-                            .then(function(res){
-                                console.log(res)
-
-                                self.mspServices = res.data;
-                                return res.data;
-
-                            }).catch(function(e){
-
-                        })
-                    }
-                },
                 locals : {
                     orgId : self.orgId,
                     activeServices : self.services
@@ -159,16 +167,26 @@
             })
         }
         
-        function ManageServices($mdDialog, services, orgId, activeServices){
+        function ManageServices($mdDialog, orgId, activeServices){
             var self = this;
-            console.log(services)
-            self.services = services;
+            self.contentAvailable = false;
+            self.services = null;
             self.status = {};
             self.merakiConf = {};
             self.updatedIDs = [];
             self.orgConf = {};
             self.setMeraki = false;
             self.changesSaved = false;
+
+            Services.getMSP()
+                    .then(function(res){
+                        //self.mspServices = res.data;
+                        self.services = res.data;
+                        self.contentAvailable = true;
+
+                    }).catch(function(e){
+
+                    })
 
             var activeServices = activeServices;
             var activeIds = [];
@@ -236,6 +254,7 @@
             }
 
             function setMerakiConf(payload){
+
                 Services.setConf(orgId, payload)
                     .then(function(res){
                         //update the model
@@ -248,6 +267,7 @@
             }
 
             self.close = function(){
+
                 $mdDialog.hide(self.updatedIDs)
             }
         }

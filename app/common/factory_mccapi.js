@@ -20,11 +20,13 @@
                     user_role   : 'get_roles_for_user',
                     role_add    : 'set_roles_for_user',
                     user_get    : 'get_current_user',
-                    user_pswdr  : 'request_reset_password',
                     user_add    : 'users',
                     user_delete : 'users',
                     user_update : 'users',
-                    user_confirm: 'confirm_user'
+                    user_confirm: 'confirm_user',
+                    user_requestPassReset : 'request_reset_password',
+                    user_getByToken : 'get_user_by_reset_password_token', //url
+                    user_resetPassword : 'reset_password'
 
                 },
                 msps : {
@@ -82,6 +84,10 @@
             //if path variable has key words [add, request, create]
             //change method to POST
             if(sd[1].indexOf('add') !== -1 || sd[1].indexOf('confirm') !== -1){
+                method = 'POST';
+            }
+
+            if(sd[1].indexOf('request') !== -1 || sd[1].indexOf('confirm') !== -1){
                 method = 'POST';
             }
 

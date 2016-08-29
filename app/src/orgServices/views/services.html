@@ -1,8 +1,8 @@
-<md-toolbar>
+<md-toolbar class="mcc">
     <div class="md-toolbar-tools gray">
 
         <span flex></span>
-        <md-button aria-label="Add Organization" ng-click="_orgservices.manageServices($event)">
+        <md-button aria-label="Manage Services" ng-if="_orgservices.activeUserRole == 'admin'" ng-click="_orgservices.manageServices($event)">
             Manage Services
         </md-button>
     </div>
@@ -17,9 +17,6 @@
             <md-content class="md-padding" ng-if="tab.id == 1">
 
                 <div flex="30" ng-if="_orgservices.hasSML == true">
-
-
-
 
                     <form method="post" action="{{_orgservices.samlData.saml_url}}">
                     <md-card>
@@ -57,6 +54,5 @@
             </md-card-actions>
         </md-card>
     </div>
-
 
 </div>

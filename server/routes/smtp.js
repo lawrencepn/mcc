@@ -8,15 +8,16 @@ var helper = require('sendgrid').mail;
 /* GET users listing. */
 router.post('/', function(req, res, next) {
     console.log(req)
-    var userEmail, confirmationToken, url, msp, testurl;
+    var userEmail, confirmationToken, url, msp, testurl, msp_domain, path;
 
     userEmail = req.body.email;
     confirmationToken = req.body.token;
     msp = req.body.msp;
     msp_domain = req.body.msp_domain;
+    path = req.body.path;
 
-    testurl = 'http://localhost:63342/jdashboard/app/index.html#/confirm/' + confirmationToken + '/' + msp;
-    url = 'https://' + msp_domain + '/#/confirm/' + confirmationToken + '/' + msp;
+    testurl = 'http://localhost:63342/jdashboard/app/index.html#/' + path + '/' + confirmationToken + '/' + msp;
+    url = 'https://' + msp_domain + '/#/' + path +'/' + confirmationToken + '/' + msp;
 
     var from_email = new helper.Email("lawrence@earlynet.net"),
     to_email = new helper.Email("lawrencenyakiso@gmail.com"),

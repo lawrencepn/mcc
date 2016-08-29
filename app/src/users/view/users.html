@@ -1,37 +1,58 @@
-<div ng-cloak>
-    <md-tabs md-dynamic-height md-border-bottom>
-        <md-tab label="MSP Users">
-            <md-toolbar>
-                <div class="md-toolbar-tools gray">
 
-                    <span flex></span>
-                    <md-button aria-label="Add MSP User" ng-click="_users.addUser($event)">
-                        Add MSP User
-                    </md-button>
-                </div>
-            </md-toolbar>
-            <md-content>
-                <div flex="35" ng-if="_users.noUsers" layout="row" layout-align="center">
-                    <md-card class="md-padding">
-                        <md-card-content>
-                            <h3>Looks like you don't have any users.</h3>
-                        </md-card-content>
-                        <md-card-actions layout="row" layout-align="start center">
-                            <md-button class="md-raised md-primary">Create a user</md-button>
-                        </md-card-actions>
-                    </md-card>
-                </div>
-                <md-list>
-                    <md-list-item class="md-2-line"  ng-repeat="item in _users.mspUserList" ng-click="_users.viewUser(item.name, $index)">
-                        <div class="md-list-item-text" layout="column">
-                            <h3>{{item.email}}</h3>
-                            <p>{{item.roles[0].name}}</p>
-                        </div>
-                        <md-button class="md-secondary" ng-click="_users.updateUser_dialog(item, $index, $event)">Update</md-button>
-                        <md-divider ng-if="!$last"></md-divider>
-                    </md-list-item>
-                </md-list>
-            </md-content>
-        </md-tab>
-    </md-tabs>
-</div>
+<md-toolbar class="mcc">
+    <div class="md-toolbar-tools gray">
+        <div flex ng-hide="true">
+            <form ng-submit="$event.preventDefault()" name="searchForm">
+                <md-input-container flex>
+                    <label>Name</label>
+                    <input type="text"/>
+                </md-input-container>
+                <md-autocomplete flex
+                                 md-input-name="autocompleteField"
+                                 md-input-minlength="2"
+                                 md-input-maxlength="18"
+                                 md-no-cache="false"
+                                 md-selected-item="_users.selectedItem"
+                                 md-search-text="_users.searchText"
+                                 md-items="item in _users.querySearch(_users.searchText)"
+                                 md-item-text="item.display"
+                                 md-floating-label="Find a user">
+                    <md-item-template>
+                        <span md-highlight-text="_users.searchText">{{item.display}}</span>
+                    </md-item-template>
+                </md-autocomplete>
+            </form>
+        </div>
+        <span flex></span>
+        <md-button aria-label="Add MSP User"  ng-click="_users.addUser($event)">
+            Add MSP User
+        </md-button>
+    </div>
+</md-toolbar>
+<md-content>
+    <div flex="35" ng-if="_users.noUsers" layout="row" layout-align="center">
+        <md-card class="md-padding">
+            <md-card-content>
+                <h3>Looks like you don't have any users.</h3>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="start center">
+                <md-button class="md-raised md-primary">Create a user</md-button>
+            </md-card-actions>
+        </md-card>
+    </div>
+    <md-list>
+        <md-list-item class="md-offset"  ng-repeat="item in _users.mspUserList">
+            <div layout="row" class="user_list">
+                <md-icon md-font-set="material-icons" ng-class="{'verified_user':_users.verified_user(item)}">verified_user</md-icon>
+                <md-icon md-font-set="material-icons" ng-if="item.roles[0].resource_type == 'Msp'">device_hub</md-icon>
+                <md-icon md-font-set="material-icons" ng-if="item.roles[0].resource_type == 'Organization'">store</md-icon>
+                <md-icon md-font-set="material-icons" ng-if="item.roles[0].name == 'user'">person</md-icon>
+                <md-icon md-font-set="material-icons" ng-if="item.roles[0].name == 'admin'">account_circle</md-icon>
+                <div flex="5"></div>
+                <p>{{item.email}}</p>
+            </div>
+            <md-button class="md-secondary" ng-click="_users.updateUser_dialog(item, $index, $event)">Update</md-button>
+            <md-divider ng-if="!$last"></md-divider>
+        </md-list-item>
+    </md-list>
+</md-content>

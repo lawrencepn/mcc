@@ -22,6 +22,8 @@
         self.switchToOrg = switchToOrg;
         self.viewOrg = viewOrg;
         self.addOrganization = addOrganization;
+        self.viewOrgServices = viewOrgServices;
+        self.viewOrgUsers = viewOrgUsers;
 
 
         //if we are here, we assume token is valid
@@ -106,6 +108,7 @@
             //modal
             //Name
             //creation date, update date, services list
+            self.contentAvailable = false;
             $mdDialog.show({
                 controller: ViewOrgController,
                 controllerAs : 'self',
@@ -115,17 +118,6 @@
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 clickOutsideToClose:true,
-                resolve : {
-                    services : function(){
-                        return Services.getOrg(org.id)
-                            .then(function (res) {
-                                return res.data;
-
-                            }).catch(function (e) {
-
-                            })
-                    }
-                },
                 locals : {
                     org : org
                 }
@@ -138,12 +130,19 @@
             })
         }
 
+        function viewOrgServices() {
+            $state.go('main.orgservices')
+        }
+
+        function viewOrgUsers() {
+
+        }
+
 
         function AddOrgController($mdDialog){
             var self = this;
 
             self.cancel = function(){
-
                 $mdDialog.hide('cancel');
             }
 
@@ -152,11 +151,22 @@
             }
         }
 
-        function ViewOrgController($mdDialog, services, org){
+        function ViewOrgController($mdDialog, org){
             var self = this;
-            self.services = services;
-
+            self.services = null;
             self.org = org;
+            self.contentAvailable = false;
+
+            //get org services
+            Services.getOrg(org.id)
+                .then(function (res) {
+                    self.contentAvailable = true;
+                    self.services = res.data;
+
+                }).catch(function (e) {
+
+            })
+
             self.cancel = function(){
                 $mdDialog.hide();
             }

@@ -21,6 +21,13 @@
         self.noUsers = false;
         self.orgId = null;
         self.addUser = addUser;
+        self.activeUserRole = null;
+        self.updateUser_dialog = updateUser_dialog;
+        self.canUpdateUser = null;
+        self.canAddUser = null;
+
+        //an org admin and msp user can update an org user
+        //a user can't add another user
 
         var _mainController = $scope.$parent._main;
         //show the org selector
@@ -28,43 +35,76 @@
 
         try {
 
+            var localUser = Cachebox.get('user');
             var activeOrg = Cachebox.get('activeOrg');
+            if(activeOrg !== undefined){
+                self.orgId = activeOrg.id;
+            }else{
+                self.orgId = localUser.roles[0].resource_id
+            }
             //var mainController = $scope.$parent._main;
-            self.orgId = activeOrg.id;
-            
-            console.log()
+
+            //check persissions this user has for this organizations
+            //eg an org user cant create other users, cant manage services unless he is first an MSP user
+            if(localUser.roles[0].resource_type !== 'Msp'){
+                localUser.roles.forEach(function (hash, index, array) {
+                    if(hash.resource_id === activeOrg.id){
+                        self.activeUserRole = hash.name;
+                        return;
+                    }
+                })
+
+            }else{
+                //user is an msp
+                self.activeUserRole = 'admin';
+            }
 
         }catch (e){
 
         }
-        //get selected organization users
-        var localUser = Cachebox.get('user');
-console.log(Cachebox.get('orgusers'))
-        if (Cachebox.get('orgusers') != undefined) {
 
-            self.orgUserList = Cachebox.get('orgusers');
+        var payload = 'organization_id=' + self.orgId;
 
-        } else {
+        User.getUsers(payload)
 
-            var payload = 'organization_id=' + self.orgId;
+            .then(function (response) {
+                console.log(response)
+                Cachebox.put('orgusers', response.data);
 
-            User.getUsers(payload)
+                self.orgUserList = response.data;
 
-                .then(function (response) {
-                    console.log(response)
-                    Cachebox.put('orgusers', response.data);
+                if(self.orgUserList.length == 0){
+                    self.noUsers = true;
+                }
 
-                    self.orgUserList = response.data;
+            }).catch(function (e) {
 
-                    if(self.orgUserList.length == 0){
-                        self.noUsers = true;
-                    }
+            console.log(e)
+        });
+
+        function updateUser_dialog(user, index, ev) {
+            $mdDialog.show({
+                controller: UpdateUserController,
+                controllerAs: 'self',
+                scope: $scope,
+                preserveScope :true,
+                templateUrl: 'src/orgUsers/views/updateOrgUserDialog.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: true,
+                locals : {
+                    user : user,
+                    msp_id : localUser.msp_id,
+                }
+            })
+                .then(function (res) {
+
 
                 }).catch(function (e) {
-
                 console.log(e)
-            });
+            })
         }
+
 
         function addUser(ev) {
             $mdDialog.show({
@@ -80,7 +120,8 @@ console.log(Cachebox.get('orgusers'))
             })
                 .then(function (res) {
                     if (res !== undefined) {
-                        createUser(res)
+                        //update ui list
+                        self.orgUserList.push(response.data)
                     }
                 }).catch(function (e) {
 
@@ -88,67 +129,78 @@ console.log(Cachebox.get('orgusers'))
             })
         }
 
-        function createUser(details) {
 
-            var rolesPayload;
-            var msp = Cachebox.get('msp');
-            var user = {};
+        function UpdateUserController($mdDialog, user){
+            var self = this;
+            self.user = user;
+            self.confirm = true;
+            self.userRole = null;
+            self.orgRoleToUpdate = null;
+            //current organization
+            console.log(activeOrg)
 
-            var userType = details.userType;
-            var userPayload = {
-                user: {
-                    msp_id: localUser.msp_id,
-                    email: details.email,
+            //only present the role for the current/active organization
+            user.roles.forEach(function (role, index, array) {
+                //only push organization type roles
+                if(role.resource_type == 'Organization'){
+
+                    if(activeOrg.id == role.resource_id){
+                        self.userRole = role.name;
+                    }
                 }
+            })
+
+            self.updateUser = function(newRole){
+
             }
 
-            User.createUser(userPayload)
+            self.deleteUser = function(){
+                self.confirm = false;
+            }
+            self.deleteUserConfirmed = function(){
+                $mdDialog.hide('delete');
+            }
 
-                .then(function (response) {
-                    console.log(response)
-                    //self.mspUserList.push(response.data);
-                    rolesPayload = {
-                        roles: [
-                            {
-                                name: userType,
-                                resource_type: 'organization',
-                                resource_id: self.orgId
-                            }
-                        ]
-                    }
-                    //update ui list
-                    self.orgUserList.push(response.data)
+            self.cancelDelete = function () {
+                self.confirm = true;
+            }
 
-                    user['token'] = response.data.confirmation_token;
-                    user['email'] = response.data.email;
-                    user['msp_id']= response.data.msp_id;
-                    //set role for the user
-                    return User.setRoles(rolesPayload, response.data.id)
+            self.cancel = function () {
+                $mdDialog.hide();
+            };
 
-                }).then(function (response) {
+            self.resetUserPassword = function(){
+                var payload = {
+                    msp_id  : self.user.msp_id,
+                    email   : self.user.email
+                }
 
-                    self.noUsers = false;
-                    var payload = {
-                        token       : user.token,
-                        email       : user.email,
-                        msp         : user.msp_id,
-                        msp_domain  : msp.url_host
-                    }
-                //notify user
-                return User.notify(payload)
+                var msp = Cachebox.get('msp');
+                //email user email and show toaster or message
+                User.requestPassReset(payload)
+                    .then(function(user){
+                        //email the user
+                        var payload = {
+                            token       : user.reset_password_token,
+                            email       : user.email,
+                            msp         : user.msp_id,
+                            msp_domain  : msp.url_host,
+                            path        : 'confirm'
+                        }
+                        //notify user
+                        return User.notify(payload)
+                    }).then(function(res){
+                        //alert admin that email was send and user notified
 
-            }).then(function(response){
+                }).catch(function(e){})
+            }
 
-                console.log(response)
-
-            }).catch(function (e) {
-
-            })
         }
 
-        function AddUserController( $scope, $mdDialog) {
+        function AddUserController($mdDialog) {
 
             var self = this;
+            self.addUser = createUser;
 
             // self.user = user;
             // if(user.hasOwnProperty('roles')) {
@@ -159,21 +211,63 @@ console.log(Cachebox.get('orgusers'))
                 $mdDialog.hide();
             };
 
-            self.addUser = function (userDetails) {
-                $mdDialog.hide(userDetails);
-            };
+            function createUser(details) {
 
-            self.updateUser = function (userDetails) {
-                console.log(userDetails)
-                $mdDialog.hide(userDetails);
-            };
+                var rolePayload;
+                var msp = Cachebox.get('msp');
+                var user = {};
 
-            self.deleteUser = function(){
-                $mdDialog.hide('delete');
+                var userType = details.userType;
+                var userPayload = {
+                    user: {
+                        msp_id: localUser.msp_id,
+                        email: details.email
+                    }
+                }
+
+                User.createUser(userPayload)
+
+                    .then(function (response) {
+                        console.log(response)
+                        //self.mspUserList.push(response.data);
+                        rolePayload = {
+                            roles: [
+                                {
+                                    name: userType,
+                                    resource_type: 'organization',
+                                    resource_id: self.orgId
+                                }
+                            ]
+                        }
+
+                        user['token'] = response.data.confirmation_token;
+                        user['email'] = response.data.email;
+                        user['msp_id']= response.data.msp_id;
+                        //set role for the user
+                        return User.setRoles(rolePayload, response.data.id)
+
+                    }).then(function (response) {
+
+                    self.noUsers = false;
+                    var payload = {
+                        token       : user.token,
+                        email       : user.email,
+                        msp         : user.msp_id,
+                        msp_domain  : msp.url_host,
+                        path        : 'passwordreset'
+                    }
+                    //notify user
+                    return User.notify(payload)
+
+                }).then(function(response){
+
+                    console.log(response)
+
+                }).catch(function (e) {
+
+                })
             }
         }
-
-
     }
 
 })();

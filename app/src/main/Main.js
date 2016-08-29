@@ -12,6 +12,7 @@
                 templateUrl:'src/main/view/main.html',
                 controller: 'MainController',
                 controllerAs : '_main'
+
             })
         })
 

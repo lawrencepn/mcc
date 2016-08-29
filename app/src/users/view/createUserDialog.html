@@ -1,4 +1,4 @@
-<md-dialog id="addUser" flex="35" aria-label="Create User">
+<md-dialog id="addUser" flex="50" aria-label="Create User">
 
     <md-toolbar>
         <div class="md-toolbar-tools">
@@ -8,32 +8,76 @@
         </div>
     </md-toolbar>
     <md-dialog-content>
+        <div layout="column" layout-align="center center" ng-if="self.busy">
+            <md-progress-circular md-diameter="96"></md-progress-circular>
+        </div>
+        <div class="md-dialog-content" ng-if="!self.busy">
         <form name="createUser">
-            <div class="md-dialog-content">
-                <div layout="column">
-                    <md-input-container class="md-block">
-                        <label>Email</label>
-                        <input type="email" required name="userName" ng-model="email" >
-                        <div ng-messages="createUser.userName.$error" role="alert">
-                            <div ng-message="required">
-                                Email field cannot be empty.
+                <div layout="row">
+                    <div flex="">
+                        <h3>User details</h3>
+                        <md-input-container class="md-block">
+                            <label>Email</label>
+                            <input type="email" required name="userName" ng-model="self.userName" >
+                            <div ng-messages="createUser.userName.$error" role="alert">
+                                <div ng-message="required">
+                                    Email field cannot be empty.
+                                </div>
                             </div>
-                        </div>
-                    </md-input-container>
-                    <md-radio-group ng-model="self.userType.user">
-                        <md-radio-button value="user" class="md-primary">User</md-radio-button>
-                        <md-radio-button value="admin"> Admin </md-radio-button>
-                    </md-radio-group>
+                        </md-input-container>
+                    </div>
+                    <div flex="5"></div>
+                    <div flex>
+                        <h4>User Role</h4>
+                        <md-radio-group ng-model="self.userType.user" layout="row">
+                            <md-radio-button value="user" class="md-primary">User</md-radio-button>
+                            <md-radio-button ng-if="self.activeUserType == 'admin'" value="admin"> Admin </md-radio-button>
+                        </md-radio-group>
+                    </div>
                 </div>
-            </div>
+               <div layout="row">
+                   <div flex>
+                        <h3>MSP User Permissions</h3>
+                        <p class="md-caption">Assign user to all organizations with default permissions or customize permissions</p>
+                        <md-radio-group ng-model="perm" layout="row">
+                            <md-radio-button value="default" class="md-primary">Default</md-radio-button>
+                            <md-radio-button value="custom">Custom</md-radio-button>
+                        </md-radio-group>
+                   </div>
+                   <div flex ng-if="perm == 'custom'">
+                       <h3>Companies</h3>
+                           <div ng-repeat="company in self.companies" layout="row">
+                               <div flex>
+                                   <md-checkbox ng-checked="self.exists(company, self.selected)" ng-click="self.toggle(company, self.selected)" ng-model="orgPerm[$index]">
+                                       {{ company.name }}
+                                   </md-checkbox>
+                               </div>
+                               <div flex>
+                                   <md-radio-group ng-model="company.role" layout="row" ng-disabled="orgPerm[$index]">
+                                       <md-radio-button value="user" class="md-primary">User</md-radio-button>
+                                       <md-radio-button value="admin"> Admin </md-radio-button>
+                                   </md-radio-group>
+                               </div>
+                           </div>
+                   </div>
+               </div>
+                <!--<div data="create msp admin / user">-->
+                    <!--<div data="assign user to organizations">-->
+                        <!--<div data="assign to all org as admin / user"></div>-->
+                        <!--<div data="assign to orgs but customize">-->
+                            <!--<div data="org auto-complete ==> user / admin"> add more</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
         </form>
+        </div>
     </md-dialog-content>
     <md-dialog-actions layout="row" md-whiteframe="2">
         <md-button ng-click="self.cancel()" md-autofocus>
             Cancel
         </md-button>
         <span flex></span>
-        <md-button ng-click="self.addUser(email, self.userType.user)">
+        <md-button ng-click="self.addUser(self.userName, self.userType.user)">
             Add
         </md-button>
     </md-dialog-actions>

@@ -1,38 +1,39 @@
 
-<div ng-cloak>
-    <md-tabs md-dynamic-height md-border-bottom>
-        <md-tab label="Organization Users">
-            <md-toolbar>
-                <div class="md-toolbar-tools gray">
 
-                    <span flex></span>
-                    <md-button aria-label="Add Org user" ng-click="_orgUsers.addUser($event)">
-                        Add Org User
-                    </md-button>
-                </div>
-            </md-toolbar>
-            <md-content>
-                <div flex="35" ng-if="_orgUsers.noUsers" layout="row" layout-align="center">
-                    <md-card class="md-padding">
-                        <md-card-content>
-                            <h3>Looks like you don't have any users.</h3>
-                        </md-card-content>
-                        <md-card-actions layout="row" layout-align="start center">
-                            <md-button ng-click="_orgUsers.addUser($event)" class="md-raised md-primary">Create a user</md-button>
-                        </md-card-actions>
-                    </md-card>
-                </div>
-                <md-list>
-                    <md-list-item class="md-2-line"  ng-repeat="item in _orgUsers.orgUserList" ng-click="_orgUsers.viewUser(item.name, $index)">
-                        <div class="md-list-item-text" layout="column">
-                            <h3>{{item.email}}</h3>
-                            <p>{{item.roles[0].name}}</p>
-                        </div>
-                        <md-button class="md-secondary" ng-click="_orgUsers.updateUser_dialog(item, $index, $event)">Update</md-button>
-                        <md-divider ng-if="!$last"></md-divider>
-                    </md-list-item>
-                </md-list>
-            </md-content>
-        </md-tab>
-    </md-tabs>
-</div>
+<md-toolbar class="mcc">
+    <div class="md-toolbar-tools gray">
+        <span flex></span>
+        <md-button aria-label="Add Org user" ng-if="_orgUsers.activeUserRole == 'admin'" ng-click="_orgUsers.addUser($event)">
+            Add Org User
+        </md-button>
+    </div>
+</md-toolbar>
+<md-content>
+    <div flex="35" ng-if="_orgUsers.noUsers" layout="row" layout-align="center">
+        <md-card class="md-padding">
+            <md-card-content>
+                <h3>Looks like you don't have any users.</h3>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="start center">
+                <md-button ng-click="_orgUsers.addUser($event)" class="md-raised md-primary">Create a user</md-button>
+            </md-card-actions>
+        </md-card>
+    </div>
+
+    <md-list>
+        <md-list-item class="md-offset"  ng-repeat="item in _orgUsers.orgUserList">
+            <div layout="row" class="user_list">
+                <md-icon md-font-set="material-icons" ng-class="{'verified_user':_users.verified_user(item)}">verified_user</md-icon>
+                <md-icon md-font-set="material-icons" ng-if="item.roles[0].resource_type == 'Msp'">device_hub</md-icon>
+                <md-icon md-font-set="material-icons" ng-if="item.roles[0].resource_type == 'Organization'">store</md-icon>
+                <md-icon md-font-set="material-icons" ng-if="item.roles[0].name == 'user'">person</md-icon>
+                <md-icon md-font-set="material-icons" ng-if="item.roles[0].name == 'admin'">account_circle</md-icon>
+                <div flex="5"></div>
+                <p>{{item.email}}</p>
+            </div>
+            <md-button ng-if="_orgUsers.activeUserRole == 'admin'" class="md-secondary" ng-click="_orgUsers.updateUser_dialog(item, $index, $event)">Update</md-button>
+            <md-divider ng-if="!$last"></md-divider>
+        </md-list-item>
+    </md-list>
+
+</md-content>

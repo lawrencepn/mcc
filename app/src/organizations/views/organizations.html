@@ -1,47 +1,45 @@
-<div ng-cloak>
-    <md-tabs md-dynamic-height md-border-bottom>
-        <md-tab label="Organizations">
-            <md-toolbar>
-                <div class="md-toolbar-tools gray">
 
-                    <span flex></span>
-                    <md-button aria-label="Add Organization" ng-click="_organizations.addOrganization()">
-                        Add Organization
-                    </md-button>
-                </div>
-            </md-toolbar>
-            <md-content layout="column" >
-                <div flex="35" ng-if="_organizations.noOrgs" layout="row" layout-align="center" >
-                    <md-card class="md-padding">
-                        <md-card-content>
-                            <h3>Looks like you don't have any organizations.</h3>
+<md-toolbar class="mcc">
+    <div class="md-toolbar-tools gray">
 
-                        </md-card-content>
-                        <md-card-actions layout="row" layout-align="start center">
-                            <md-button ng-click="_organizations.addOrganization()" class="md-raised md-primary">Create Organization</md-button>
-                        </md-card-actions>
-                    </md-card>
-                </div>
-                <md-list>
-                    <md-list-item class="md-offset org_list"  ng-repeat="item in _organizations.organizationList">
+        <span flex></span>
+        <md-button aria-label="Add Organization"  ng-click="_organizations.addOrganization()">
+            Add Organization
+        </md-button>
+    </div>
+</md-toolbar>
+<md-content layout="column" >
+    <div flex="35" ng-if="_organizations.noOrgs" layout="row" layout-align="center" >
+        <md-card class="md-padding">
+            <md-card-content>
+                <h3>Looks like you don't have any organizations.</h3>
 
-                            <p>{{item.name}}</p>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="start center">
+                <md-button ng-click="_organizations.addOrganization()" class="md-raised md-primary">Create Organization</md-button>
+            </md-card-actions>
+        </md-card>
+    </div>
+    <md-list>
+        <md-list-item class="md-offset org_list"  ng-repeat="item in _organizations.organizationList">
 
-                            <md-button aria-label="Users" class="md-icon-button">
-                                <md-icon md-font-set="material-icons"> people </md-icon>
-                            </md-button>
-                            <md-button aria-label="Services" class="md-icon-button">
-                                <md-icon md-font-set="material-icons"> settings_input_component </md-icon>
-                            </md-button>
-                            <md-button class="md-icon-button" ng-click="_organizations.viewOrg(item, $index, $event)">
-                                <md-icon md-font-set="material-icons"> info_outline </md-icon>
-                            </md-button>
-                            <md-button ng-click="_organizations.switchToOrg(item.name, $index)">Switch</md-button>
+                <p>{{item.name}}</p>
 
-                        <md-divider ng-if="!$last"></md-divider>
-                    </md-list-item>
-                </md-list>
-            </md-content>
-        </md-tab>
-    </md-tabs>
-</div>
+                <!--<md-button aria-label="Services" class="md-icon-button" ng-click="_organizations.viewOrgServices($event)">-->
+                    <!--<md-icon md-font-set="material-icons" > settings_input_component </md-icon>-->
+                <!--</md-button>-->
+                <!--<md-button aria-label="Users" class="md-icon-button" ng-click="_organizations.viewOrgUsers($event)">-->
+                    <!--<md-icon md-font-set="material-icons"> people </md-icon>-->
+                <!--</md-button>-->
+
+                <md-button class="md-icon-button" ng-click="_organizations.viewOrg(item, $index, $event)">
+                    <md-icon md-font-set="material-icons"> info_outline </md-icon>
+                </md-button>
+                <md-button class="md-icon-button" ng-click="_organizations.switchToOrg(item.name, $index)">
+                    <md-icon md-font-set="material-icons">launch</md-icon>
+                </md-button>
+
+            <md-divider ng-if="!$last"></md-divider>
+        </md-list-item>
+    </md-list>
+</md-content>

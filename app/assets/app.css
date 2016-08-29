@@ -110,9 +110,44 @@ span.name {
 #dialogContent_addOrg .md-block{
   margin: 0;
 }
+md-toolbar.mcc{
+  min-height: 40px;
+}
 .md-toolbar-tools.gray{
   background-color: gray;
+  max-height: 40px
 }
 .org_list > p{
   margin-left:10px;
+}
+md-select .md-select-value.md-select-placeholder{
+  color:white;
+}
+md-select:not([disabled]):focus .md-select-value{
+  color: white;
+}
+.user-roles{
+
+}
+.user-roles > span{
+  font-weight: normal;
+  margin-right: 12px;
+  font-size: 10px;
+}
+.user-roles > span:first-of-type{
+  color: blueviolet
+
+}
+
+.no-margin-bottom{
+  margin-bottom: 0px;
+}
+.md-button[disabled].user-confirmed, md-icon.material-icons.verified_user{
+  color: green;
+}
+.md-button[disabled].user-confirmed md-icon{
+  color: green;
+}
+.user_list md-icon.material-icons{
+  font-size: 20px;
 }

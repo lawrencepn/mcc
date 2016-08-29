@@ -7,7 +7,10 @@
         </div>
     </md-toolbar>
     <md-dialog-content class="md-padding">
-        <form name="merakiInfo" novalidate>
+        <div ng-if="!self.contentAvailable" layout="column" flex layout-align="center center">
+            <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+        </div>
+        <form name="merakiInfo" novalidate ng-if="self.contentAvailable">
             <div layout="column">
                 <md-list>
                     <md-subheader class="md-no-sticky">Toggle Services</md-subheader>
@@ -53,7 +56,7 @@
             Cancel
         </md-button>
         <span flex></span>
-        <md-button type="submit" ng-click="self.saveChanges(self.status, self.merakiConf)" ng-disabled="false" md-autofocus>
+        <md-button type="submit" ng-click="self.saveChanges(self.status, self.merakiConf)" ng-disabled="!self.contentAvailable" md-autofocus>
             Save Changes
         </md-button>
         <md-button type="submit" ng-click="self.close()" ng-disabled="self.changesSaved == false" md-autofocus>

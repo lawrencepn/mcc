@@ -24,7 +24,8 @@ angular
         'org',
         'orgusers',
         'orgservices',
-        'confirm'
+        'confirm',
+        'passwordreset'
 
     ])
     .config(function($mdThemingProvider, $urlRouterProvider, OAuthProvider, OAuthTokenProvider, $sceDelegateProvider, $httpProvider){
@@ -65,7 +66,7 @@ angular
         $httpProvider.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8';
 
     })
-    .run(function($rootScope, $window, OAuth){
+    .run(function($rootScope, $window, OAuth, $state){
 
         $rootScope.$on('oauth:error', function(event, rejection) {
             // Ignore `invalid_grant` error - should be catched on `LoginController`.
@@ -81,5 +82,18 @@ angular
             // Redirect to `/login` with the `error_reason`.
             return $window.location.href = '/login?error_reason=' + rejection.data.error;
         });
+
+        //is token there
+        $rootScope.$on('$stateChangeStart',
+            function(event, toState, toParams, fromState, fromParams, options){
+            console.log(OAuth.isAuthenticated())
+                console.log(toState)
+                if(!OAuth.isAuthenticated()){
+                    if(toState.name !== 'login'){
+                        $state.go('login');
+                    }
+                 }
+            })
+
     });
 })();

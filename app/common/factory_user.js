@@ -28,7 +28,10 @@
             setRoles    : setRoles,
             updateUser  : updateUser,
             confirm     : confirmUser,
-            notify      : notifynewUser
+            notify      : notifynewUser,
+            requestPassReset : requestPassReset,
+            passwordReset : passwordReset,
+            getUserByToken  : getUserByToken
 
         };
 
@@ -58,7 +61,6 @@
             var promise = mccapi.callAPI(route, {});
             return promise;
         };
-
         function deleteUser(userId){
             route = 'user.user_delete.' + userId;
             var promise = mccapi.callAPI(route, {});
@@ -87,12 +89,29 @@
             var url = 'http://localhost:4000/smtp';
 
             return $http({
-                method: "POST",
-                url: url,
-                data :payload
+                method : "POST",
+                url : url,
+                data : payload
             })
 
         }
+
+
+        function requestPassReset(payload){
+            route = 'user.user_requestPassReset';
+            var promise = mccapi.callAPI(route, payload);
+            return promise;
+        }
+
+        function getUserByToken(){
+
+        }
+
+        function passwordReset(){
+
+        }
+
+
     }
 
 })();
