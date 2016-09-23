@@ -20,7 +20,7 @@
         self.mspUserList = [];
         self.addUser = addUser;
         self.viewUser = viewUser;
-        self.updateUser_dialog = updateUser_dialog;
+        self.updateUser = updateUser;
         self.deleteUser = deleteUser;
         self.selectedItem  = null;
         self.searchText    = null;
@@ -28,40 +28,40 @@
         self.noUsers = false;
 
 
-        var _mainController = $scope.$parent._main;
-        //show the org selector
-        _mainController.canToggleOrg = false;
+        var errorHandler = function(error) {
+            console.log(error)
+        }
 
-        var localUser = Cachebox.get('user');
-        console.log(localUser)
-        //roles type of current msp user
-        self.activeUserType = localUser.roles[0].name;
-
-
-        if (Cachebox.get('mspusers') !== undefined) {
-
-            self.mspUserList = Cachebox.get('mspusers');
-
-        } else {
+        try {
+            var _mainController = $scope.$parent._main;
+            //show the org selector
+            _mainController.canToggleOrg = false;
+            var localUser = Cachebox.get('user');
+            //roles type of current msp user
+            self.activeUserType = localUser.roles[0].name;
 
             var payload = 'msp_id=' + localUser.msp_id;
-
-            User.getUsers(payload)
-
-                .then(function (response) {
-                    console.log(response)
-                    Cachebox.put('mspusers', response.data);
-                    self.mspUserList = response.data;
-
-                    if(self.mspUserList.length == 0){
-                        self.noUsers = true;
+            User.getUsers(payload, 'msp').then(function (response) {
+                    if(response.data !== undefined){
+                        Cachebox.put('mspusers', response.data);
+                        self.mspUserList = response.data;
+                        if(response.data.length == 0){
+                            self.noUsers = true;
+                        }
+                    }else{
+                        self.mspUserList = response;
                     }
 
                 }).catch(function (e) {
 
-                console.log(e)
+                handleError(error)
             });
+
+        }catch(error){
+            //
+            handleError(error)
         }
+
         self.verified_user = function(user){
             if(user.confirmed_at == null){
                 return false
@@ -85,32 +85,59 @@
             };
         }
 
-        function addUser(ev) {
-            $mdDialog.show({
-                controller: AddUserController,
-                scope: $scope,
-                preserveScope: true,
-                controllerAs : 'self',
-                templateUrl: 'src/users/view/createUserDialog.html',
-                parent: angular.element(document.body),
-                targetEvent: ev,
-                clickOutsideToClose: true,
-                locals : {
+        //create user
+        function addUser(ev){
+            var template = 'src/users/view/createUserDialog.html',
+                locals = {
                     msp_id : localUser.msp_id,
                     activeUserType : self.activeUserType
-
                 }
-            })
-            .then(function (res) {
+
+            function aa(res) {
+
                 if(res !== undefined){
                     self.mspUserList.push(res)
                 }
-            }).catch(function (e) {
+            }
 
-            console.log(e)
-            })
+            user_dialog(AddUserController, template, locals, ev, aa)
+
         }
 
+        //update user
+        function updateUser(user, index, ev){
+            var template = 'src/users/view/updateUserDialog.html',
+                locals = {
+                    user : user,
+                    msp_id : localUser.msp_id
+                }
+
+            function ba(res) {
+                if (res !== undefined && res !== 'delete') {
+                    updateUser(user, res.n)
+                }
+                if(res == 'delete'){
+                    deleteUser(user,index);
+                }
+            }
+
+            user_dialog(UpdateUserController,template, locals, ev, ba)
+
+        }
+
+        function user_dialog(controller, template, locals, ev, callback) {
+            $mdDialog.show({
+                controller: controller,
+                scope: $scope,
+                preserveScope: true,
+                controllerAs: 'self',
+                templateUrl: template,
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: true,
+                locals: locals
+            }).then(callback).catch(errorHandler);
+        }
 
         function viewUser() {
 
@@ -126,67 +153,6 @@
 
                 })
         }
-
-        function updateUser_dialog(user, index, ev) {
-            $mdDialog.show({
-                controller: UpdateUserController,
-                controllerAs: 'self',
-                scope: $scope,
-                preserveScope :true,
-                templateUrl: 'src/users/view/updateUserDialog.html',
-                parent: angular.element(document.body),
-                targetEvent: ev,
-                clickOutsideToClose: true,
-                locals : {
-                    user : user,
-                    msp_id : localUser.msp_id,
-                }
-            })
-                .then(function (res) {
-
-                    if (res !== undefined && res !== 'delete') {
-                        updateUser(user, res.n)
-                    }
-
-                    if(res == 'delete'){
-                        deleteUser(user,index);
-                    }
-
-                }).catch(function (e) {
-                console.log(e)
-            })
-        }
-
-        function updateUser(user, newRole){
-            console.log(user)
-            console.log(newRole)
-            //confirm role
-            //{"user" : {"email": "testuser@jurumani.com", "password": "testpass_new"}}
-            var payload = {
-                user : {
-                    email       : user.email
-                }
-            }
-
-            //update user-role
-            //{"roles" : [{"name": "admin", "resource_type": "msp", "resource_id": 4}] }
-
-            // User.updateUser(user.id, payload)
-            //
-            //     .then(function(response){
-            //         $mdToast.show(
-            //             $mdToast.simple()
-            //                 .textContent('Update : Success!')
-            //                 .position('top right')
-            //                 .hideDelay(3000)
-            //         );
-            //
-            //     }).catch(function(e){
-            //     console.log(e)
-            // })
-
-        }
-
 
 
         function AddUserController($mdDialog, msp_id, activeUserType) {
@@ -210,7 +176,6 @@
 
                 var new_user_roles = [];
 
-
                 //first user is an msp user:
                 var msp_hash = {
                     name: userRole,
@@ -222,7 +187,7 @@
 
                 //iterate selected orgs and check if role has been assigned
                 if(self.selected.length !== 0){
-                   // name, [admin, user]
+                   //name, [admin, user]
 // ·                        resource_type, [msp, organization]
 // ·                        resource_id, the id of the msp or the organization
 //                         console.log(response)
@@ -268,7 +233,6 @@
             };
 
             self.exists = function (item, list) {
-
                 return list.indexOf(item) > -1;
             };
 
@@ -331,7 +295,6 @@
                 })
             }
 
-
         }
 
         function UpdateUserController($mdDialog, user, msp_id){
@@ -339,27 +302,53 @@
             var self = this;
             self.user = user;
             self.confirm = true;
+            self.updating = false;
             self.selected = [];
-            self.selectedUpdate = [];
+            self.rolesToAdd = [];
+            self.rolesToRemove = [];
             self.userOrgRoles = [];
             self.organizations = [];
             self.newOrgRoles = [];
-            self.addNewRole = addNewRole;
-            self.resetUserPassword = resetUserPassword;
+            self.addNewRole = getOrganizations;
+            self.sendResetLink = sendResetLink;
+            self.addRolesToUser = addRolesToUser;
+            self.updateUserRoles = updateUserRoles;
+            self.roleOrgNames = [];
+
+            self.role_scope = '';
+
+            var roles_to_add = [];
+            var roles_to_remove = [];
+
+            //get users latest roles
+            ///api/v1/get_roles_for_user/11
 
 
-            //fill the role
-            //fill the orgs and the user roles for those orgs
+            var extractRoles = function (roles){
+                //reset arrays
+                self.selected = [];
+                self.userOrgRoles = [];
+                self.roleOrgNames = [];
+                roles.forEach(function (role, index, array) {
+                    //only push organization type roles
+                    if(role.resource_type == 'Organization'){
+                        self.selected.push(role);
+                        self.userOrgRoles.push(role);
+                        self.roleOrgNames.push(role.resource_name)
+                    }
+                })
+            };
 
+            User.getUserRoles(user.id)
+                .then(function(res){
+                    console.log(res.data)
+                    extractRoles(res.data)
 
-            //fill the selected array with roles for checkbox
-            user.roles.forEach(function (role, index, array) {
-                //only push organization type roles
-                if(role.resource_type == 'Organization'){
-                    self.selected.push(role);
-                    self.userOrgRoles.push(role);
-                }
-            })
+                }).catch(function(e){
+                    //show error message
+                console.log(e)
+            });
+
 
             //if
             if(user.hasOwnProperty('roles')) {
@@ -373,11 +362,24 @@
             self.toggle = function (item, list, x) {
 
                 var idx = list.indexOf(item);
+
+                //if its there, remove it, if its not there, add it
+                //if x is an array
                 if (idx > -1) {
                     list.splice(idx, 1);
+                    if(!x){
+                        //add to items to remove
+                        self.rolesToRemove.push(item)
+                    }
                 }
                 else {
-                    if(x){}
+                    //user wants to leave roles as it is, remove it from rolesToRemove
+                    if(!x){
+                        var idxx = self.rolesToRemove.indexOf(item)
+                        if(idxx){
+                            self.rolesToRemove.splice(idxx, 1)
+                        }
+                    }
                     list.push(item);
                 }
             };
@@ -391,106 +393,183 @@
 
             if(user.confirmed_at == null){
                 self.notconfirmed = true;
-            }
+            };
 
             self.deleteUserConfirmed = function(){
                 $mdDialog.hide('delete');
-            }
+            };
 
             self.cancelDelete = function () {
                 self.confirm = true;
-            }
+            };
 
             self.cancel = function () {
-                $mdDialog.hide();
+                if(self.updateType === 'add'){
+                    //reset
+                    self.updateType = '';
+                    self.allowAddNewRole = false;
+                    self.updating = false;
+
+                }else{
+                    $mdDialog.hide();
+                }
             };
-            self.updateUser = function (newRole) {
-                console.log(self.selectedUpdate) //new roles
-                console.log(self.selected) //existing
-                var res = {
-                    n : newRole
-                },
-                    new_user_roles = [];
+
+            self.deleteUser = function(){
+                self.confirm = false;
+            };
+
+            //dependency function
+            var xd = function(arr, list){
+                console.log(arr)
+                arr.forEach(function (org, index, array) {
+                    var x = {
+                        name : org.role || 'user',
+                        resource_type: 'organization',
+                        resource_id: org.resource_id || org.id //org.id if adding
+                    };
+                    list.push(x)
+                })
+            };
 
 
-                //push the msp role
-                //then push exisiting roles into the array
+            function updateUserRoles (newRole) {
+                //TODO: show progress bar
+                self.updating = true;
 
-                //first user is an msp user:
-                var msp_hash = {
-                    name: newRole,
-                    resource_type: 'msp',
-                    resource_id: localUser.msp_id
+                //changes in msp role or org roles
+
+                if(user.name !== newRole){
+                    //changes have been made
+                    //submit new user msp role
+                    var msp_hash = {
+                        name: newRole,
+                        resource_type: 'msp',
+                        resource_id: localUser.msp_id
+                    }
+
+                    //update user-role
+                    //{"roles" : [{"name": "admin", "resource_type": "msp", "resource_id": 4}] }
+                    var payload = {
+                        roles : [msp_hash]
+                    }
+
+                    console.log(msp_hash)
+                    console.log(user.id)
+
+                    User.setRoles(payload, user.id)
+                        .then(function(response){
+                            self.updating = false;
+                            $mdToast.show(
+                                $mdToast.simple()
+                                    .textContent('Update : Success!')
+                                    .position('top right')
+                                    .hideDelay(3000)
+                            );
+
+                        }).catch(errorHandler)
                 }
 
-                new_user_roles.push(msp_hash)
+                if(self.rolesToRemove.length > 0){
+                    //there are roles to remove
+                    removeRolesFromUser();
+                }
+            };
+
+            function addRolesToUser(perm){
+
+                self.updating = true;
 
                 //iterate selected orgs and check if role has been assigned
                 //updating is the same as creating, therefore
                 //we new and exisiting roles into the array
-                function xd(arr){
-                    arr.forEach(function (org, index, array) {
-                        var x = {
-                            name : org.role || 'user',
-                            resource_type: 'organization',
-                            resource_id: org.id
-                        }
-                        new_user_roles.push(x)
+
+                if(self.role_scope === 'allOrgs'){
+                    console.log(perm)
+                    //add user and org admin to all orgs under the current msp
+                    self.organizations.forEach(function (org, index, arr) {
+                        self.toggle(org, self.rolesToAdd, true)
                     })
                 }
-                //new roles
-                if(self.selectedUpdate.length !== 0){
-                    xd(self.selectedUpdate)
-                }
-                //old roles
-                if(self.selected.length !== 0){
-                    xd(self.selected)
+
+                if(self.rolesToAdd.length !== 0){
+                    xd(self.rolesToAdd, roles_to_add)
                 }
 
-                //make the call
-                updateUserRoles(new_user_roles)
-                //$mdDialog.hide(res);
+                var roles_payload = {
+                    roles : roles_to_add
+                }
+
+                console.log(roles_payload)
+                User.addRoles(roles_payload, user.id)
+                    .then(function(res){
+                        console.log(res)
+                        self.updating = false;
+                        //roles added, notify admin
+                        extractRoles(res.data);
+                        self.updateType = '';
+                        self.allowAddNewRole = false;
+                        //get new user roles and update the screen
+
+                        //reset arrays
+                        roles_to_add = [];
+                        self.rolesToAdd = [];
+                        xf();
+
+                    }).catch(errorHandler)
 
             };
 
-            function updateUserRoles(roles){
-                //TODO: use the set roles method
+            function removeRolesFromUser() {
 
-                var rolesPayload = {
-                    roles: roles
+                if(self.rolesToRemove.length !== 0){
+                    xd(self.rolesToRemove, roles_to_remove)
                 }
 
-                User.setRoles(rolesPayload, user.id)
+                var roles_payload = {
+                    roles : roles_to_remove
+                }
+
+                console.log(roles_payload)
+
+                User.deleteRoles(roles_payload, user.id)
                     .then(function(res){
-                        console.log(res)
-                    }).catch(function (err) {
-                    console.log(err)
-                })
+                        self.updating = false;
+                        extractRoles(res.data);
+                        //update roles
+                        roles_to_remove = [];
+                        self.rolesToRemove = [];
+                    }).catch(errorHandler)
+            };
 
+            function xf(){
+                //companies
+                self.organizations = [];
+                Organization.getOrganizations(msp_id)
+                    .then(function(res){
+                        //extract or names or ids
+                        res.data.forEach(function(org, index, arr){
+                            if(self.roleOrgNames.indexOf(org.name) < 0){
+                                self.organizations.push(org)
+                            }
+                        })
+
+                    }).catch(errorHandler);
             }
 
-            self.deleteUser = function(){
-                self.confirm = false;
-            }
-
-            function addNewRole(){
+            function getOrganizations(){
                 //show organizations and perms, preselect the active roles
                 self.allowAddNewRole = true;
                 self.addingNewRole = true;
+                self.updateType = 'add';
                 //get companies
+                xf();
 
-                //companies
+                //hide update, and switch update button to "Add Roles"
 
-                Organization.getOrganizations(msp_id)
-                    .then(function(response){
-                        self.organizations = response.data;
-                    }).catch(function(e){
+            };
 
-                });
-
-            }
-
-            function resetUserPassword(){
+            function sendResetLink(){
                 var payload = {
                     msp_id  : self.user.msp_id,
                     email   : self.user.email
@@ -501,20 +580,28 @@
                 User.requestPassReset(payload)
                     .then(function(user){
                         //email the user
-                        var payload = {
-                            token       : user.reset_password_token,
-                            email       : user.email,
-                            msp         : user.msp_id,
+                        console.log(user)
+                        var o = {
+                            token       : user.data.reset_password_token,
+                            email       : user.data.email,
+                            msp         : user.data.msp_id,
                             msp_domain  : msp.url_host,
                             path        : 'passwordreset'
                         }
                         //notify user
-                        return User.notify(payload)
+                        return User.notify(o)
                     }).then(function(res){
+                        console.log(res)
                     //alert admin that email was send and user notified
+                    $mdToast.show(
+                        $mdToast.simple()
+                            .textContent('Email has been sent!')
+                            .position('top right')
+                            .hideDelay(3000)
+                    );
 
-                }).catch(function(e){})
-            }
+                }).catch(errorHandler)
+            };
         }
 
     }

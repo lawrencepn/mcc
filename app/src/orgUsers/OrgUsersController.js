@@ -5,7 +5,7 @@
     'use strict';
     angular
         .module('orgusers')
-        .controller('OrgUsersController', ['$scope', '$mdDialog','User','Organization','MSP','Cachebox','OAuth','$stateParams', OrganizationController]);
+        .controller('OrgUsersController', ['$scope', '$mdDialog','User','Organization','MSP','Cachebox','OAuth','$stateParams','$mdToast', OrganizationController]);
 
     /**
      * Main Controller
@@ -14,35 +14,38 @@
      * @param avatarsService
      * @constructor
      */
-    function OrganizationController($scope, $mdDialog, User, Organization, MSP, Cachebox, OAuth, $stateParams) {
+    function OrganizationController($scope, $mdDialog, User, Organization, MSP, Cachebox, OAuth, $stateParams, $mdToast) {
         var self = this;
 
         self.orgUserList = [];
         self.noUsers = false;
         self.orgId = null;
-        self.addUser = addUser;
         self.activeUserRole = null;
+        self.addUser = addUser;
         self.updateUser_dialog = updateUser_dialog;
         self.canUpdateUser = null;
         self.canAddUser = null;
 
         //an org admin and msp user can update an org user
         //a user can't add another user
-
-        var _mainController = $scope.$parent._main;
-        //show the org selector
-        _mainController.canToggleOrg = true;
+        var errorHandler = function(error) {
+            console.log(error)
+        }
 
         try {
 
+            var _mainController = $scope.$parent._main;
+            //show the org selector
+            _mainController.canToggleOrg = true;
             var localUser = Cachebox.get('user');
             var activeOrg = Cachebox.get('activeOrg');
+
             if(activeOrg !== undefined){
                 self.orgId = activeOrg.id;
             }else{
                 self.orgId = localUser.roles[0].resource_id
             }
-            //var mainController = $scope.$parent._main;
+
 
             //check persissions this user has for this organizations
             //eg an org user cant create other users, cant manage services unless he is first an MSP user
@@ -59,28 +62,35 @@
                 self.activeUserRole = 'admin';
             }
 
-        }catch (e){
+            var payload = 'organization_id=' + self.orgId;
+            User.getUsers(payload, null).then(function (response) {
+                    if(response.data !== undefined){
+                        Cachebox.put('orgusers', response.data);
+                        self.orgUserList = response.data;
+                        if(self.orgUserList.length == 0){
+                            self.noUsers = true;
+                        }
+                    }else{
+                        self.orgUserList = response;
+                    }
 
+                }).catch(function (e) {
+
+                handleError(error)
+            });
+
+        }catch (error){
+            handleError(error)
         }
 
-        var payload = 'organization_id=' + self.orgId;
 
-        User.getUsers(payload)
-
-            .then(function (response) {
-                console.log(response)
-                Cachebox.put('orgusers', response.data);
-
-                self.orgUserList = response.data;
-
-                if(self.orgUserList.length == 0){
-                    self.noUsers = true;
-                }
-
-            }).catch(function (e) {
-
-            console.log(e)
-        });
+        self.verified_user = function(user){
+            if(user.confirmed_at == null){
+                return false
+            }else{
+                return true
+            }
+        }
 
         function updateUser_dialog(user, index, ev) {
             $mdDialog.show({
@@ -98,8 +108,6 @@
                 }
             })
                 .then(function (res) {
-
-
                 }).catch(function (e) {
                 console.log(e)
             })
@@ -136,6 +144,7 @@
             self.confirm = true;
             self.userRole = null;
             self.orgRoleToUpdate = null;
+            self.sendResetLink = sendResetLink;
             //current organization
             console.log(activeOrg)
 
@@ -169,30 +178,41 @@
                 $mdDialog.hide();
             };
 
-            self.resetUserPassword = function(){
+
+            function sendResetLink(){
                 var payload = {
                     msp_id  : self.user.msp_id,
                     email   : self.user.email
                 }
+                //email user email and show toaster or message
 
                 var msp = Cachebox.get('msp');
-                //email user email and show toaster or message
                 User.requestPassReset(payload)
                     .then(function(user){
                         //email the user
-                        var payload = {
-                            token       : user.reset_password_token,
-                            email       : user.email,
-                            msp         : user.msp_id,
+                        console.log(user)
+                        var o = {
+                            token       : user.data.reset_password_token,
+                            email       : user.data.email,
+                            msp         : user.data.msp_id,
                             msp_domain  : msp.url_host,
-                            path        : 'confirm'
+                            path        : 'passwordreset'
                         }
                         //notify user
-                        return User.notify(payload)
+                        return User.notify(o)
                     }).then(function(res){
-                        //alert admin that email was send and user notified
+                    console.log(res)
+                    //alert admin that email was send and user notified
+                    $mdToast.show(
+                        $mdToast.simple()
+                            .textContent('Email has been sent!')
+                            .position('top right')
+                            .hideDelay(3000)
+                    );
 
-                }).catch(function(e){})
+                }).catch(function(e){
+                    console.log(e)
+                })
             }
 
         }
@@ -249,15 +269,15 @@
                     }).then(function (response) {
 
                     self.noUsers = false;
-                    var payload = {
-                        token       : user.token,
-                        email       : user.email,
-                        msp         : user.msp_id,
+                    var o = {
+                        token       : user.data.reset_password_token,
+                        email       : user.data.email,
+                        msp         : user.data.msp_id,
                         msp_domain  : msp.url_host,
                         path        : 'passwordreset'
                     }
                     //notify user
-                    return User.notify(payload)
+                    return User.notify(o)
 
                 }).then(function(response){
 

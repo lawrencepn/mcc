@@ -35,16 +35,18 @@
 
         self.mspName = self.mspName || " ";
 
-        self.close = function () {
+        self.close = function() {
             $mdSidenav('left').close();
         };
-        self.openLeft = function () {
+        self.openLeft = function() {
+            console.log('ill')
             $mdSidenav('left').open();
         };
 
         //side menu navigation
         self.viewNavigate = function (viewName) {
             //switch dashboard view
+            $mdSidenav('left').close();
             $state.go('main.' + viewName);
         }
 

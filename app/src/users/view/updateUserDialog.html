@@ -1,4 +1,4 @@
-<md-dialog id="updateUser" flex="50" aria-label="Create User">
+<md-dialog id="updateUser" flex="50" flex-sm="90" flex-xs="90" aria-label="Create User">
 
     <md-toolbar>
         <div class="md-toolbar-tools">
@@ -16,7 +16,7 @@
         <div class="md-dialog-content" ng-if="!self.busy">
             <form  name="updateUser" ng-if="self.confirm">
 
-                <div layout="row">
+                <div layout="row" ng-if="!self.allowAddNewRole">
                     <div flex="50">
                         <h3>Update user email and user role</h3>
                         <md-input-container class="md-block">
@@ -36,19 +36,18 @@
                         <md-button ng-click="" ng-disabled="!self.notconfirmed" class="md-icon-button" ng-class="{'md-warn': self.notconfirmed, 'user-confirmed' : !self.notconfirmed}">
                             <md-icon md-font-set="material-icons">verified_user</md-icon>
                         </md-button>
-                        <md-button ng-click="" class="md-icon-button">
+                        <md-button ng-click="self.sendResetLink()" class="md-icon-button">
                             <md-icon md-font-set="material-icons">link</md-icon>
                         </md-button>
                     </div>
-
                 </div>
 
-                <div layout="row">
+                <div layout="row" ng-if="!self.allowAddNewRole">
                     <div flex>
                         <h3>Organization Roles</h3>
                         <div ng-repeat="role in self.userOrgRoles" layout="row">
-                            <div flex>
-                                <md-checkbox ng-checked="self.exists(role, self.selected)" ng-click="self.toggle(role, self.selected, null)">
+                            <div flex="30">
+                                <md-checkbox ng-checked="self.exists(role, self.selected)" ng-click="self.toggle(role, self.selected, false)">
                                     {{ role.resource_name }}
                                 </md-checkbox>
                             </div>
@@ -63,13 +62,18 @@
                         <div ng-if="self.userOrgRoles.length == 0">
                             <p>This user has not been assigned any Organization roles</p>
                         </div>
-                        <md-button ng-disabled="self.addingNewRole" ng-click="self.addNewRole()">Add new role</md-button>
+                        <md-button ng-click="self.addNewRole()">Add new role</md-button>
 
-                        <div>
-                            <h4 >New Org Roles</h4>
-                            <div  ng-repeat="orgRole in self.selectedUpdate track by $index" layout="row">
+                    </div>
+                </div>
+
+                <div layout="row">
+                    <div flex>
+                        <div ng-if="self.allowAddNewRole">
+                            <h4 >New Org Roles To Add</h4>
+                            <div  ng-repeat="orgRole in self.rolesToAdd track by $index" layout="row">
                                 <div flex>
-                                    <md-checkbox ng-checked="self.exists(orgRole, self.selectedUpdate)" ng-click="self.toggle(orgRole, self.selectedUpdate, null)">
+                                    <md-checkbox ng-checked="self.exists(orgRole, self.rolesToAdd)"  ng-click="self.toggle(orgRole, self.rolesToAdd, null)">
                                         {{ orgRole.name }}
                                     </md-checkbox>
                                 </div>
@@ -81,7 +85,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <div flex="5"></div>
                     <div flex>
@@ -89,23 +92,23 @@
                             <div flex>
                                 <h3>MSP User Organization Roles</h3>
                                 <p class="md-caption">Assign user to all organizations with default permissions or customize permissions</p>
-                                <md-radio-group ng-model="perm" layout="row">
-                                    <md-radio-button value="default" class="md-primary">Default</md-radio-button>
+                                <md-radio-group ng-model="self.role_scope" layout="row">
+                                    <md-radio-button value="allOrgs" class="md-primary">Default</md-radio-button>
                                     <md-radio-button value="custom">Custom</md-radio-button>
                                 </md-radio-group>
                             </div>
-                            <div flex ng-if="perm == 'custom'">
-                                <h3>Companies</h3>
+                            <div flex ng-if="self.role_scope == 'custom'">
+                                <h3>Select Organizations And Role</h3>
                                 <div ng-repeat="organization in self.organizations" layout="row">
                                     <div flex>
-                                        <md-checkbox ng-checked="self.exists(organization, self.selectedUpdate)" ng-click="self.toggle(organization, self.selectedUpdate, true)" >
+                                        <md-checkbox ng-checked="self.exists(organization, self.rolesToAdd)" ng-click="self.toggle(organization, self.rolesToAdd, true)" >
                                             {{ organization.name }}
                                         </md-checkbox>
                                     </div>
                                     <div flex>
                                         <md-radio-group ng-model="organization.role" layout="row">
                                             <md-radio-button value="user" class="md-primary">User</md-radio-button>
-                                            <md-radio-button value="admin"> Admin </md-radio-button>
+                                            <md-radio-button value="admin">Admin</md-radio-button>
                                         </md-radio-group>
                                     </div>
                                 </div>
@@ -113,6 +116,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!--<div data="create msp admin / user">-->
                 <!--<div data="assign user to organizations">-->
                 <!--<div data="assign to all org as admin / user"></div>-->
@@ -138,15 +142,32 @@
             Cancel Delete
         </md-button>
         <span flex></span>
-        <md-button ng-if="self.confirm" class="md-raised md-primary" ng-click="self.updateUser(self.userRole)">
-            Update
-        </md-button>
-        <md-button ng-if="self.confirm" class="md-raised md-warn" ng-click="self.deleteUser()">
-            Delete User
-        </md-button>
-        <md-button ng-if="!self.confirm" class="md-raised md-warn" ng-click="self.deleteUserConfirmed()">
-            Confirm Delete
-        </md-button>
+        <div ng-if="!self.updating" layout="row">
+            <div ng-switch="self.updateType">
+                <div ng-switch-when="add">
+                    <md-button ng-if="self.confirm" class="md-raised md-primary" ng-click="self.addRolesToUser(self.role_scope)">
+                        Add Roles
+                    </md-button>
+                </div>
+                <div ng-switch-default>
+                    <md-button ng-if="self.confirm" class="md-raised md-primary" ng-click="self.updateUserRoles(self.userRole)">
+                        Update
+                    </md-button>
+                    <md-button ng-if="self.confirm" class="md-raised md-warn" ng-click="self.deleteUser()">
+                        Delete User
+                    </md-button>
+                    <md-button ng-if="!self.confirm" class="md-raised md-warn" ng-click="self.deleteUserConfirmed()">
+                        Confirm Delete
+                    </md-button>
+                </div>
+            </div>
+
+        </div>
+        <div ng-if="self.updating">
+            <div layout="column" layout-align="center center">
+                <md-progress-circular></md-progress-circular>
+            </div>
+        </div>
     </md-dialog-actions>
 
 </md-dialog>

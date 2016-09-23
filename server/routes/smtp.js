@@ -7,7 +7,7 @@ var helper = require('sendgrid').mail;
 
 /* GET users listing. */
 router.post('/', function(req, res, next) {
-    console.log(req)
+    console.log(req.body)
     var userEmail, confirmationToken, url, msp, testurl, msp_domain, path;
 
     userEmail = req.body.email;
@@ -35,9 +35,6 @@ router.post('/', function(req, res, next) {
     request.body = requestBody
 
     sg.API(request, function (response) {
-        console.log(response.statusCode)
-        console.log(response.body)
-        console.log(response.headers)
         res.send(response);
     })
 

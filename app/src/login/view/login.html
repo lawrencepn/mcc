@@ -1,57 +1,57 @@
 <div layout="row" layout-align="center">
-<div layout="column" flex-xs="100" flex-sm="90" flex-md="33" flex-lg="33" >
+<div layout="column" layout-align="center" flex-xs="100" flex-sm="90" flex-md="33" flex-lg="33">
     <div flex class="login_logo" hide-xs hide-sm>
         <img src="assets/img/mcc_logo.png" alt="My Cloud Central">
     </div>
     <div flex class="login_logo_sm" hide-md hide-lg >
         <img src="assets/img/mcc_logo.png" alt="My Cloud Central">
     </div>
-    <div flex >
-            <md-card class="md-padding">
-                <md-card-title>
-                    <md-card-title-text>
-                        <span class="md-headline">SIGN IN</span>
-                    </md-card-title-text>
-                </md-card-title>
-                <md-card-content>
-                    <form name="loginForm"  novalidate>
-                        <md-input-container class="md-block">
-                            <label>Username</label>
-                            <input required minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" md-no-asterisk type="email" name="userEmail" ng-model="loginForm.username">
-                            <div ng-messages="loginForm.userEmail.$error" role="alert">
-                                <div ng-message="required">
-                                    Username field cannot be empty.
-                                </div>
-                                <div ng-message-exp="['minlength', 'maxlength', 'pattern']">
-                                    Please provide a valid email address.
-                                </div>
+    <div flex>
+        <md-card class="md-padding">
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">SIGN IN</span>
+                </md-card-title-text>
+            </md-card-title>
+            <md-card-content>
+                <form name="loginForm"  novalidate>
+                    <md-input-container class="md-block">
+                        <label>Username</label>
+                        <input required minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" md-no-asterisk type="email" name="userEmail" ng-model="loginForm.username">
+                        <div ng-messages="loginForm.userEmail.$error" role="alert">
+                            <div ng-message="required">
+                                Username field cannot be empty.
                             </div>
-                        </md-input-container>
-                        <md-input-container class="md-block">
-                            <label>Password</label>
-                            <input required type="password" name="userPassword" ng-model="loginForm.password">
-                            <div ng-messages="loginForm.userPassword.$error" role="alert">
-                                <div ng-message="required">
-                                    Password field cannot be empty
-                                </div>
+                            <div ng-message-exp="['minlength', 'maxlength', 'pattern']">
+                                Please provide a valid email address.
                             </div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container class="md-block">
+                        <label>Password</label>
+                        <input required type="password" name="userPassword" ng-model="loginForm.password">
+                        <div ng-messages="loginForm.userPassword.$error" role="alert">
+                            <div ng-message="required">
+                                Password field cannot be empty
+                            </div>
+                        </div>
 
-                        </md-input-container>
-                    </form>
-                    <div class="formError">
-                        <p ng-show="_login.formError">Invalid Credentials.</p>
-                    </div>
-                </md-card-content>
-                <md-card-actions class="md-padding-half" layout="row" layout-align="start center">
+                    </md-input-container>
+                </form>
+                <div class="formError">
+                    <p ng-show="_login.formError">Invalid Credentials.</p>
+                </div>
+            </md-card-content>
+            <md-card-actions class="md-padding-half" layout="row" layout-align="start center">
 
-                    <md-button class="md-raised md-primary" type="submit" ng-disabled="loginForm.$invalid" ng-click="_login.authenticateUser(loginForm)">Login</md-button>
-                    <div flex flex-offset="10">
-                        <md-checkbox md-no-ink aria-label="Checkbox No Ink" ng-model="loginForm.stayLoggedIn" class="md-primary login_checkbox">
-                            Stay logged in.
-                        </md-checkbox>
-                    </div>
-                </md-card-actions>
-            </md-card>
+                <md-button class="md-raised md-primary" type="submit" ng-disabled="loginForm.$invalid" ng-click="_login.authenticateUser(loginForm)">Login</md-button>
+                <div flex flex-offset="10">
+                    <md-checkbox md-no-ink aria-label="Checkbox No Ink" ng-model="loginForm.stayLoggedIn" class="md-primary login_checkbox">
+                        Stay logged in.
+                    </md-checkbox>
+                </div>
+            </md-card-actions>
+        </md-card>
         <div class="login_semi"><a href="#">Terms</a> | <a href="#">Help</a></div>
         <div class="login_semi">{{_login.clientDomain}}</script></div>
     </div>

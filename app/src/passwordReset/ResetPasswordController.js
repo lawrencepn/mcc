@@ -24,11 +24,11 @@
 
         }
 
-        self.passwordReset = passwordReset;
+        self.resetPassword = passwordReset;
         self.gotoLogin = false;
         self.invalidToken = false;
 
-        var confirmation_token = $stateParams.confirmation_token;
+        var reset_token = $stateParams.reset_token;
         var msp_id = $stateParams.msp_id;
 
         try{
@@ -42,23 +42,24 @@
         //get user by token,
         //if valid, make call for password reset
 
-        function passwordReset(user){
+        function passwordReset(password){
 
-            var new_password = user.password;
-            var payload = {
+            this.payload = {
                 msp_id  : msp_id,
-                confirmation_token  : confirmation_token,
-                password    : new_password
+                reset_password_token  : reset_token,
+                password    : password
             }
 
-            User.passwordReset(payload)
+            User.passwordReset(this.payload)
                 .then(function(user){
                     //all went well
+                    console.log(user)
                     self.gotoLogin = true;
 
                 }).catch(function(e){
                     //token not valid
-                self.ivalidToken = true;
+                console.log(e)
+                self.invalidToken = true;
             })
         }
 

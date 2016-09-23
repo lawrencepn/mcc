@@ -19,7 +19,10 @@
                 user :{
                     user_role   : 'get_roles_for_user',
                     role_add    : 'set_roles_for_user',
+                    user_role_add : 'add_roles_to_user',
+                    user_role_remove_request : 'remove_roles_from_user',
                     user_get    : 'get_current_user',
+                    user_getRoles : 'get_roles_for_user',
                     user_add    : 'users',
                     user_delete : 'users',
                     user_update : 'users',
@@ -87,7 +90,11 @@
                 method = 'POST';
             }
 
-            if(sd[1].indexOf('request') !== -1 || sd[1].indexOf('confirm') !== -1){
+            if(sd[1].indexOf('reset') !== -1){
+                method = 'POST';
+            }
+
+            if(sd[1].indexOf('request') !== -1){
                 method = 'POST';
             }
 

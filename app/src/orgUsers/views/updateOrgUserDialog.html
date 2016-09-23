@@ -13,7 +13,7 @@
         <div layout="column" layout-align="center center" ng-if="self.busy">
             <md-progress-circular md-diameter="96"></md-progress-circular>
         </div>
-        <div class="md-dialog-content" ng-if="!self.busy">
+        <div class="md-dialog-content" ng-if="!self.busy" id="updateUserToast">
             <form  name="updateUser" ng-if="self.confirm">
 
                 <div layout="row">
@@ -36,7 +36,7 @@
                         <md-button ng-click="" ng-disabled="!self.notconfirmed" class="md-icon-button" ng-class="{'md-warn': self.notconfirmed, 'user-confirmed' : !self.notconfirmed}">
                             <md-icon md-font-set="material-icons">verified_user</md-icon>
                         </md-button>
-                        <md-button ng-click="self.resetUserPassword()" class="md-icon-button">
+                        <md-button ng-click="self.sendResetLink()" class="md-icon-button">
                             <md-icon md-font-set="material-icons">link</md-icon>
                         </md-button>
                     </div>

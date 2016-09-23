@@ -76,6 +76,7 @@ span.name {
 .login_logo{
   margin-top: 30%;
   margin-bottom: 40px;
+  max-height: 150px;
 }
 .login_logo img{
   display: block;
@@ -86,13 +87,14 @@ span.name {
 
 .login_logo_sm{
   margin-top: 10%;
+  max-height: 100px;
   margin-bottom: 40px;
 }
 .login_logo_sm img{
   display: block;
   position: relative;
   margin: auto;
-  width: 120px;
+  width: 150px;
 }
 
 .login_semi{
