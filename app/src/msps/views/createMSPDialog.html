@@ -1,0 +1,103 @@
+<md-dialog id="createMSP" flex="50" aria-label="Create MSP">
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Create an MSP</h2>
+            <span flex></span>
+
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div layout="column" layout-align="center center" ng-if="self.busy">
+            <md-progress-circular md-diameter="96"></md-progress-circular>
+        </div>
+        <div class="md-dialog-content">
+            <form name="createMSP">
+                <div layout="row">
+                    <div flex>
+                        <md-input-container class="md-block">
+                            <label>MSP Name</label>
+                            <input type="text" required name="mspName" ng-model="self.msp.name">
+                            <div ng-messages="createMSP.mspName.$error" role="alert">
+                                <div ng-message="required">
+                                    MSP name is required.
+                                </div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <div flex="5"></div>
+                    <div flex>
+                        <md-input-container class="md-block">
+                            <label>MSP URL</label>
+                            <input type="url" required name="mspURL" ng-model="self.msp.url_host">
+                            <div ng-messages="createMSP.mspURL.$error" role="alert">
+                                <div ng-message="required">
+                                    MSP URL is required
+                                </div>
+                            </div>
+                        </md-input-container>
+
+                    </div>
+                </div>
+                <div layout="row">
+                    <div flex>
+                        <md-input-container class="md-block">
+                            <label>Meraki API Key</label>
+                            <input type="text" required name="merakiAPI" ng-model="self.msp.meraki_api_key">
+                            <div ng-messages="createMSP.merakiAPI.$error" role="alert">
+                                <div ng-message="required">
+                                    Meraki API key for MSP is required
+                                </div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <div flex="5"></div>
+                    <div flex>
+                        <h3>Is MSP Enabled?</h3>
+                        <!--<p class="md-caption">Assign user to all organizations with default permissions or customize permissions</p>-->
+                        <md-radio-group ng-model="self.msp.enabled" layout="row">
+                            <md-radio-button value="1" class="md-primary">YES</md-radio-button>
+                            <md-radio-button value="0" >NO</md-radio-button>
+                        </md-radio-group>
+                    </div>
+                </div>
+                <div layout="row">
+                    <div flex>
+                        <md-input-container class="md-block">
+                            <label>CSS</label>
+                            <textarea required md-maxlength="150" rows="5" ng-model="self.msp.css" md-select-on-focus></textarea>
+                            <div ng-messages="createMSP.merakiAPI.$error" role="alert">
+                                <div ng-message="required">
+                                    Meraki API key for MSP is required
+                                </div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                </div>
+                <!--<div data="create msp admin / user">-->
+                <!--<div data="assign user to organizations">-->
+                <!--<div data="assign to all org as admin / user"></div>-->
+                <!--<div data="assign to orgs but customize">-->
+                <!--<div data="org auto-complete ==> user / admin"> add more</div>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</div>-->
+            </form>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row" md-whiteframe="2">
+        <md-button ng-click="self.cancel()" md-autofocus>
+            Cancel
+        </md-button>
+        <span flex></span>
+        <md-button ng-if="self.actionToTake == 'create'" ng-click="self.createTheMSP(self.msp)">
+            Create
+        </md-button>
+        <md-button ng-if="self.actionToTake == 'update'" ng-click="self.updateMSP(self.msp)">
+            Update
+        </md-button>
+        <md-button ng-if="self.actionToTake == 'done'" ng-click="self.cancel()">
+            Done
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

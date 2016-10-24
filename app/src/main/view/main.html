@@ -21,35 +21,38 @@
         <md-content layout="column">
 
             <md-list>
-
+                    <md-list-item ng-if="_main.superUser" ng-click="_main.viewNavigate('msp')">
+                        <md-icon class="md-avatar-icon" md-font-set="material-icons">dashboard</md-icon>
+                        <p>MSPs</p>
+                    </md-list-item>
                     <md-subheader class="md-no-sticky">Overview</md-subheader>
                     <md-list-item ng-click="_main.viewNavigate('dashboard')">
-                        <md-icon md-font-set="material-icons">dashboard</md-icon>
+                        <md-icon class="md-avatar-icon" md-font-set="material-icons">dashboard</md-icon>
                         <p>Dashboard</p>
                     </md-list-item>
                     <md-divider></md-divider>
                 <div ng-if="_main.orgUser">
                     <md-subheader class="md-no-sticky">MSP Actions</md-subheader>
                     <md-list-item ng-click="_main.viewNavigate('organizations')">
-                        <md-icon md-font-set="material-icons">work</md-icon>
+                        <md-icon class="md-avatar-icon" md-font-set="material-icons">work</md-icon>
                         <p>Organizations</p>
                     </md-list-item>
                     <md-list-item ng-click="_main.viewNavigate('users')">
-                        <md-icon md-font-set="material-icons">assignment_ind</md-icon>
+                        <md-icon class="md-avatar-icon" md-font-set="material-icons">assignment_ind</md-icon>
                         <p>Users</p>
                 </md-list-item>
                 </div>
                 <md-subheader class="md-no-sticky">Organization Actions</md-subheader>
                 <md-list-item ng-click="_main.viewNavigate('orgservices')" ng-disabled="_main.orgNotActive">
-                    <md-icon md-font-set="material-icons">settings_input_component</md-icon>
+                    <md-icon class="md-avatar-icon" md-font-set="material-icons">settings_input_component</md-icon>
                     <p>Services</p>
                 </md-list-item>
                 <md-list-item ng-click="_main.viewNavigate('orgusers')" ng-disabled="_main.orgNotActive">
-                    <md-icon md-font-set="material-icons">people</md-icon>
+                    <md-icon class="md-avatar-icon" md-font-set="material-icons">people</md-icon>
                     <p>Users</p>
                 </md-list-item>
-                <md-list-item ng-click="_main.viewNavigate('orgsettings')" ng-disabled="_main.orgNotActive">
-                    <md-icon md-font-set="material-icons">people</md-icon>
+                <md-list-item class="md-avatar-icon" ng-click="_main.viewNavigate('orgsettings')" ng-disabled="_main.orgNotActive">
+                    <md-icon class="md-avatar-icon" md-font-set="material-icons">people</md-icon>
                     <p>Organization Settings</p>
                 </md-list-item>
 

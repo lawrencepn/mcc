@@ -5,7 +5,7 @@
     'use strict';
     angular
         .module('orgservices')
-        .controller('OrgServicesController', ['$mdDialog', 'User', 'Organization', 'MSP', 'Cachebox', 'OAuth', '$stateParams', '$scope','Services','$timeout', OrgServicesController]);
+        .controller('OrgServicesController', ['$mdDialog', 'User', 'Organization', 'MSP', 'Cachebox', 'OAuth', '$mdSidenav', '$scope','Services','$timeout', OrgServicesController]);
 
     /**
      * Main Controller
@@ -14,20 +14,30 @@
      * @param avatarsService
      * @constructor
      */
-    function OrgServicesController( $mdDialog, User, Organization, MSP, Cachebox, OAuth, $stateParams, $scope, Services, $timeout) {
+    function OrgServicesController( $mdDialog, User, Organization, MSP, Cachebox, OAuth, $mdSidenav, $scope, Services, $timeout) {
         var self = this;
         self.orgId = null;
         self.manageServices = manageServices;
+        self.sites = sitesTab;
+        self.config = siteConfig;
+        self.createOrgSite = createOrgSite;
+        self.cancelCreateSite = cancelCreateSite;
+        self.addOrgSite = addOrgSite;
+        self.mapSite = mapSite;
+        self.create_site = false;
         self.services = [];
         self.mspServices = [];
         self.hasNoServices = true;
         self.samlData = {};
         self.hasSML = false;
         self.activeUserRole = null;
+        self.sitesList = [];
+        self.meraki_networks = [];
 
 
         var updatedServices = [];
 
+        //sidenav
         var _mainController = $scope.$parent._main;
         //show the org selector
         _mainController.canToggleOrg = true;
@@ -50,7 +60,6 @@
                         return;
                     }
                 })
-
             }else{
                 //user is an msp
                 self.activeUserRole = 'admin';
@@ -70,7 +79,6 @@
                 if( res.data.length == 0){
                     self.hasNoServices = false;
                 }
-
 
             }).catch(function (e) {
             
@@ -92,11 +100,101 @@
 
         })
 
+        function sitesTab() {
+            //get sites
+            console.log('despite')
+            var payload = 'organization_id=' + self.orgId;
+
+            Services.getSites(payload)
+                .then(function(response){
+                    console.log(response)
+                    self.sitesList = response.data;
+                }).catch(function(error){
+                    console.log(error)
+            })
+        }
+
+        function siteConfig(site) {
+            self.selectedSite = site;
+            self.meraki_networks = [];
+            $mdSidenav('right')
+                .toggle()
+                .then(function () {
+
+                });
+
+            //get site config
+            Services.getSiteConf(site.id)
+                .then(function(response){
+                    console.log(response)
+                    self.siteConf = response.data;
+                    if(response.data.meraki_network_id == null){
+                        //get meraki networks for user to select
+                        Services.getMerakiNetworks(site.organization_id)
+                            .then(function(response){
+
+                                //if response is not an array
+                                if(Array.isArray(response.data)){
+                                    self.meraki_networks = response.data;
+                                }else{
+                                    self.meraki_networks.push(response.data);
+                                }
+                                console.log(response.data)
+                            }).catch(function(error){
+                            console.log(error)
+                        })
+                    }
+                })
+        }
+        
+        function mapSite(site, mnetwork) {
+            console.log(site)
+            console.log(mnetwork)
+            //set meraki networks
+            var payload = {
+                meraki_network_id: self.meraki_networks[mnetwork].id
+            }
+
+            Services.setSiteConf(site.id, payload)
+                .then(function(response){
+                    console.log(response)
+                }).catch(function(error){
+            })
+        }
+
+        function cancelCreateSite(){
+            self.create_site = false;
+        }
+
+        function createOrgSite(siteName){
+
+            //{"site" : {"name": "Centurion", "organization_id" : 2}}
+            var payload = {
+                site: {
+                    name: siteName,
+                    organization_id : self.orgId
+                }
+            }
+
+            Services.createSite(payload)
+                .then(function(response){
+                    console.log(response.data)
+                    self.sitesList = response.data;
+                    self.create_site = false;
+                }).catch(function (error) {
+                console.log(error)
+            })
+        }
+
+        function addOrgSite(){
+            self.create_site = true;
+        }
+
         function manageServices(ev){
             //get all msp services
             //show services modal
             $mdDialog.show({
-                controller: ManageServices,
+                controller: ManageServicesController,
                 scope: $scope,
                 preserveScope: true,
                 controllerAs : 'self',
@@ -167,7 +265,7 @@
             })
         }
         
-        function ManageServices($mdDialog, orgId, activeServices){
+        function ManageServicesController($mdDialog, orgId, activeServices){
             var self = this;
             self.contentAvailable = false;
             self.services = null;

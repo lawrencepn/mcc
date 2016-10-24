@@ -1,4 +1,10 @@
-<div layout="row" layout-align="center">
+<div layout="column" layout-align="center center" ng-if="!_login.pageReady">
+    <div flex>
+        <md-progress-circular  md-diameter="96"></md-progress-circular>
+    </div>
+
+</div>
+<div layout="row" layout-align="center" ng-if="_login.pageReady">
 <div layout="column" layout-align="center" flex-xs="100" flex-sm="90" flex-md="33" flex-lg="33">
     <div flex class="login_logo" hide-xs hide-sm>
         <img src="assets/img/mcc_logo.png" alt="My Cloud Central">

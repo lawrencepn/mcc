@@ -35,6 +35,19 @@
                         </md-radio-group>
                     </div>
                 </div>
+                <div layout="row" ng-if="self._superUser">
+                    <div flex>
+                        <h3>Add User To An MSP</h3>
+                        <p class="md-caption">Select and MSP to add this user to, by default they will be added to Admin</p>
+                        <div ng-repeat="msp in self.mspList" layout="row">
+                            <div flex>
+                                <md-checkbox ng-checked="self.exists(msp, self.selectedMSP)" ng-click="self.toggle(msp, self.selectedMSP)" ng-model="userMSP">
+                                    {{ msp.name }}
+                                </md-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                <div layout="row">
                    <div flex>
                         <h3>MSP User Permissions</h3>
@@ -45,7 +58,7 @@
                         </md-radio-group>
                    </div>
                    <div flex ng-if="perm == 'custom'">
-                       <h3>Companies</h3>
+                       <h3>Give The User Organization Roles</h3>
                            <div ng-repeat="company in self.companies" layout="row">
                                <div flex>
                                    <md-checkbox ng-checked="self.exists(company, self.selected)" ng-click="self.toggle(company, self.selected)" ng-model="orgPerm[$index]">

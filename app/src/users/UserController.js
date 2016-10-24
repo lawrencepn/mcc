@@ -2,7 +2,7 @@
 
     angular
         .module('users')
-        .controller('UserController', ['$scope','User', '$mdSidenav', '$mdDialog', 'Cachebox','$mdToast','Organization',
+        .controller('UserController', ['$scope','User', '$mdSidenav', '$mdDialog', 'Cachebox','$mdToast','Organization','MSP',
             UsersController
         ])
         //.controller('AddUserController', ['$mdDialog', AddUserController]);
@@ -15,7 +15,7 @@
      * @param avatarsService
      * @constructor
      */
-    function UsersController($scope ,User, $mdSidenav, $mdDialog, Cachebox, $mdToast, Organization) {
+    function UsersController($scope ,User, $mdSidenav, $mdDialog, Cachebox, $mdToast, Organization, MSP) {
         var self = this;
         self.mspUserList = [];
         self.addUser = addUser;
@@ -27,6 +27,9 @@
         self.querySearch   = querySearch;
         self.noUsers = false;
 
+        var _superUser = false;
+
+
 
         var errorHandler = function(error) {
             console.log(error)
@@ -36,6 +39,10 @@
             var _mainController = $scope.$parent._main;
             //show the org selector
             _mainController.canToggleOrg = false;
+            self._superUser = _mainController.superUser;
+            _superUser = self._superUser;
+            console.log(self._superUser)
+
             var localUser = Cachebox.get('user');
             //roles type of current msp user
             self.activeUserType = localUser.roles[0].name;
@@ -167,6 +174,12 @@
 
             self.activeUserType = activeUserType;
             self.associative_roles = [];
+            self.mspList = [];
+            self.selectedMSP = [];
+            //companies
+            self.companies = [];
+            self.selected = [];
+            self._superUser = _superUser;
 
             self.addUser = function (email, userRole) {
                 var userDetails = {
@@ -176,14 +189,15 @@
 
                 var new_user_roles = [];
 
-                //first user is an msp user:
-                var msp_hash = {
-                    name: userRole,
-                    resource_type: 'msp',
-                    resource_id: localUser.msp_id
-                }
-
-                new_user_roles.push(msp_hash)
+                //prepare msps
+                self.selectedMSP.forEach(function (msp, index, array) {
+                    var msp_hash = {
+                        name: userRole,
+                        resource_type: 'msp',
+                        resource_id: localUser.msp_id
+                    }
+                    new_user_roles.push(msp_hash)
+                })
 
                 //iterate selected orgs and check if role has been assigned
                 if(self.selected.length !== 0){
@@ -210,9 +224,6 @@
                 $mdDialog.hide();
             };
 
-            //companies
-            self.companies = [];
-            self.selected = [];
 
             Organization.getOrganizations(msp_id)
                 .then(function(response){
@@ -220,6 +231,15 @@
                 }).catch(function(e){
 
             });
+
+            if(_superUser){
+                MSP.getMSPs()
+                    .then(function(res){
+                        self.mspList = res.data;
+                    }).catch(function(e){
+
+                });
+            }
 
             self.toggle = function (item, list) {
 

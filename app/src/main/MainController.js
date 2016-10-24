@@ -28,6 +28,7 @@
         self.orgUser = true;
         self.logout = logout
         var localUser;
+        self.superUser = false;
 
         //if(!self.orgNotActive){
         //    self.orgNotActive = true;
@@ -50,6 +51,27 @@
             $state.go('main.' + viewName);
         }
 
+        var payload = {
+            url_host: 'https://admin.mcctest.co.za'
+        }
+
+        MSP.getMSPbyURL(payload)
+            .then(function(res){
+                self.msp = res.data;
+                //take style and inject it
+                var css = document.createElement("style");
+                css.type = "text/css";
+                css.innerHTML = res.data.css;
+                document.head.appendChild(css);
+                self.pageReady = true;
+
+                console.log(self.msp)
+
+            }).catch(function(e){
+            console.log(e)
+            self.pageReady = false;
+        });
+
 
         //TODO: append url with active org name
         //TODO:if org is selected, enable org menu and get org object
@@ -60,12 +82,18 @@
                 localUser = response.data;
 
                 //user type
-                if(response.data.roles !== null){
+                if(response.data.roles.length > 0){
+
                     if(response.data.roles[0].resource_type === 'Organization'){
                         self.orgUser = false;
                         self.orgNotActive = false;
+                    }else if(response.data.roles[0].resource_type === 'Msp' && response.data.roles[0].name === 'admin'){
+
+                        self.superUser = true;
                     }
                 }
+
+                //if you belong to Admin and you are an admin user, then you are super user
 
                 return MSP.getMSP(localUser.msp_id)
 

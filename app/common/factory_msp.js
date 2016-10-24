@@ -20,16 +20,49 @@
         var route;
         return {
 
-            getMSP : getMSP
+            getMSP : getMSP,
+            getMSPs : getMSPs,
+            getMSPbyURL : getMSPbyURL,
+            merakiOrganizations : merakiOrganizations,
+            createMSP : createMSP,
+            updateMSP : updateMSP
 
         };
 
         function getMSP(msp_id){
             route = 'msps.msp_path.' + msp_id;
-
             var promise = mccapi.callAPI(route, {});
             return promise;
 
+        };
+
+        function getMSPs(){
+            route = 'msps.msps';
+            var promise = mccapi.callAPI(route, {});
+            return promise;
+        };
+
+        function getMSPbyURL(payload) {
+            route = 'msps.request_msp';
+            var promise = mccapi.callAPI(route, payload);
+            return promise;
+
+        }
+
+        function merakiOrganizations() {
+
+        };
+
+        function createMSP(payload){
+            route = 'msps.add_msp';
+            var promise = mccapi.callAPI(route, payload);
+            return promise;
+        };
+
+        function updateMSP(payload, msp_id) {
+            route = 'msps.update_msp.' + msp_id;
+            var promise = mccapi.callAPI(route, payload);
+            return promise;
         };
     }
 

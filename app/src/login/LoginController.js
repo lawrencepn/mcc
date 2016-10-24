@@ -7,7 +7,7 @@
 
     angular
         .module('login')
-        .controller('LoginController', ['LoginService','$state','OAuth', LoginController]);
+        .controller('LoginController', ['LoginService','$state','OAuth','MSP', LoginController]);
 
     /**
      * Main Controller for the Angular Material Starter App
@@ -16,19 +16,51 @@
      * @param avatarsService
      * @constructor
      */
-    function LoginController( LoginService, $state, OAuth ) {
+    function LoginController( LoginService, $state, OAuth, MSP ) {
         var self = this;
         self.token = null;
         self.formError = false
         self.authenticateUser = authenticateUser;
         self.clientDomain = window.clientDomain;
         //is user token still valid?
+        self.pageReady = false;
 
         //got here from dashboard -> handle
 
         //is keep logged in selected
         if(OAuth.isAuthenticated()){
             //$state.go('main.dashboard')
+        }
+
+        try{
+
+            //get msp
+            // var payload = {
+            //     url_host: document.URL.substring(8);
+            // }
+            var payload = {
+                url_host: 'https://admin.mcctest.co.za'
+            }
+
+            MSP.getMSPbyURL(payload)
+                .then(function(res){
+                    self.msp = res.data;
+                    //take style and inject it
+                    var css = document.createElement("style");
+                    css.type = "text/css";
+                    css.innerHTML = res.data.css;
+                    document.body.appendChild(css);
+                    self.pageReady = true;
+
+                    console.log(self.msp)
+
+                }).catch(function(e){
+                    console.log(e)
+                self.pageReady = false;
+            });
+
+        }catch (error){
+
         }
 
 

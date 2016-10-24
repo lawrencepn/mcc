@@ -25,6 +25,7 @@ angular
         'orgusers',
         'orgservices',
         'orgsettings',
+        'msps',
         'confirm',
         'passwordreset'
 

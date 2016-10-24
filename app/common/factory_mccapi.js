@@ -34,6 +34,11 @@
                 },
                 msps : {
                     msp_path    : 'msps',
+                    meraki_organizations : 'meraki_organizations',
+                    msps : 'msps',
+                    add_msp : 'msps',
+                    update_msp : 'msps',
+                    request_msp : 'find_msp_by_url_host'
 
                 },
                 organization:{
@@ -46,7 +51,20 @@
                     add         : 'set_services_for_organization',
                     get_conf    : 'get_config_for_organization',
                     add_conf    : 'set_config_for_organization',
-                    get_saml    : 'get_meraki_saml_data'
+                    get_saml    : 'get_meraki_saml_data',
+                    get_sites   : 'sites',
+                    add_site    : 'sites',
+                    get_site_conf : 'sites',
+                    add_site_conf   : 'sites'
+                },
+                meraki : {
+                    sites   : 'sites',
+                    update_site : 'sites',
+                    add_site : 'sites',
+                    set_site_conf  : 'sites',
+                    add_m_network : 'sites',
+                    networks : 'organizations'
+
                 }
             }
         })
@@ -81,8 +99,6 @@
                 //build url
                 sf = api_vars.routes[sd[0]][sd[1]];
             }
-
-            console.log(sf)
 
             //if path variable has key words [add, request, create]
             //change method to POST

@@ -8,18 +8,43 @@
     </div>
 </md-toolbar>
 
-<div ng-cloak>
+<div flex layout="column" layout-fill>
+    <md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
+        <md-toolbar class="md-theme-light">
+            <h1 class="md-toolbar-tools">{{_orgservices.selectedSite.name}}</h1>
+        </md-toolbar>
+        <md-content>
+            <div layout="column" layout-padding>
+                <h4>Meraki Mapping</h4>
+                <p class="md-caption">Select A Meraki Network to map this site to.</p>
+            </div>
+            <div layout="column">
+                <md-radio-group ng-model="mn">
+                <md-list>
+                    <md-list-item class="org_list" ng-repeat="network in _orgservices.meraki_networks">
+                        <p>{{network.name}}</p>
+                        <md-radio-button class="md-secondary" value="{{$index}}" ng-model="mnetwork"></md-radio-button>
+                        <md-divider ng-if="!$last"></md-divider>
+                    </md-list-item>
+                </md-list>
+                </md-radio-group>
+            </div>
+            <md-input-container>
+                <md-button ng-click="_orgservices.mapSite(_orgservices.selectedSite, mn)" class="md-primary">
+                    <p>Save</p>
+                </md-button>
+            </md-input-container>
+        </md-content>
 
-    <md-tabs md-dynamic-height md-border-bottom>
+    </md-sidenav>
+    <md-tabs md-border-bottom layout-fill>
         <md-tab ng-repeat="tab in _orgservices.services"
                 ng-disabled="tab.disabled"
                 label="{{tab.name}}">
             <md-content class="md-padding" ng-if="tab.id == 1">
-
-                <div flex="30" ng-if="_orgservices.hasSML == true">
-
-                    <form method="post" action="{{_orgservices.samlData.saml_url}}">
+                <div flex="35" ng-if="_orgservices.hasSML == true">
                     <md-card>
+                        <form method="post" action="{{_orgservices.samlData.saml_url}}">
                         <md-card-title>
                             <md-card-title-text>
                                 <span class="md-headline">Meraki Services</span>
@@ -29,17 +54,62 @@
                         <md-card-content>
                             <input type="hidden" name="SAMLResponse" value="{{_orgservices.samlData.saml_response}}" />
                             <input type="hidden" name="RelayState" value="token" />
-
                         </md-card-content>
                         <md-card-actions layout="row" layout-align="end center">
                             <md-button type="submit">Logon to Meraki</md-button>
                         </md-card-actions>
+                        </form>
                     </md-card>
-                    </form>
                 </div>
             </md-content>
             <md-content class="md-padding" ng-if="tab.id == 2">
                 <p>Only Presence Analytics in here</p>
+            </md-content>
+        </md-tab>
+        <md-tab label="Sites" md-on-select="_orgservices.sites()">
+
+            <md-content layout="column">
+                <div layout="row" ng-if="!_orgservices.create_site">
+                    <md-button class="md-raised md-primary" ng-click="_orgservices.addOrgSite()">Create Site</md-button>
+                </div>
+
+                <div layout="column" ng-if="_orgservices.create_site" class="md-padding">
+                    <form name="createSite" flex layout="row">
+                        <md-input-container flex class="md-block">
+                            <label>Site Name</label>
+                            <input type="text" ng-model="sitename"/>
+                        </md-input-container>
+                        <md-input-container flex class="md-block">
+                            <md-button class="md-primary" ng-click="_orgservices.createOrgSite(sitename)">Add</md-button>
+                        </md-input-container>
+                        <md-input-container flex class="md-block">
+                            <md-button class="md-primary" ng-click="_orgservices.cancelCreateSite()">Cancel</md-button>
+                        </md-input-container>
+                    </form>
+                </div>
+
+                <div layout="column">
+                    <md-list>
+                        <md-list-item class="md-offset org_list"  ng-repeat="item in _orgservices.sitesList">
+                            <p>{{item.name}}</p>
+                            <md-button class="md-icon-button" ng-click="_orgservices.config(item)">
+                                <md-icon md-font-set="material-icons"> settings_applications</md-icon>
+                            </md-button>
+                            <md-divider ng-if="!$last"></md-divider>
+                        </md-list-item>
+                    </md-list>
+                </div>
+
+                <div flex="35"  layout="row" ng-if="_orgservices.sitesList.length == 0">
+                    <md-card class="md-padding">
+                        <md-card-content>
+                            <h3>This organization has no sites.</h3>
+                        </md-card-content>
+                        <md-card-actions layout="row" layout-align="start center">
+                            <md-button ng-click="_orgservices.addOrgSite()" class="md-raised md-primary md-padding">Create Site</md-button>
+                        </md-card-actions>
+                    </md-card>
+                </div>
             </md-content>
         </md-tab>
     </md-tabs>
