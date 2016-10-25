@@ -27,7 +27,8 @@ angular
         'orgsettings',
         'msps',
         'confirm',
-        'passwordreset'
+        'passwordreset',
+        'sites'
 
     ])
     .config(function($mdThemingProvider, $urlRouterProvider, OAuthProvider, OAuthTokenProvider, $sceDelegateProvider, $httpProvider){

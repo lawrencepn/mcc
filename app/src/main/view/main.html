@@ -43,6 +43,14 @@
                 </md-list-item>
                 </div>
                 <md-subheader class="md-no-sticky">Organization Actions</md-subheader>
+                <md-list-item ng-click="_main.viewNavigate('org')" ng-disabled="_main.orgNotActive">
+                    <md-icon class="md-avatar-icon" md-font-set="material-icons">dashboard</md-icon>
+                    <p>Dashboard</p>
+                </md-list-item>
+                <md-list-item ng-click="_main.viewNavigate('sites')" ng-disabled="_main.orgNotActive">
+                    <md-icon class="md-avatar-icon" md-font-set="material-icons">dashboard</md-icon>
+                    <p>Sites</p>
+                </md-list-item>
                 <md-list-item ng-click="_main.viewNavigate('orgservices')" ng-disabled="_main.orgNotActive">
                     <md-icon class="md-avatar-icon" md-font-set="material-icons">settings_input_component</md-icon>
                     <p>Services</p>
