@@ -34,7 +34,7 @@
                 },
                 msps : {
                     msp_path    : 'msps',
-                    meraki_organizations : 'meraki_organizations',
+                    meraki_organizations : 'msps',
                     msps : 'msps',
                     add_msp : 'msps',
                     update_msp : 'msps',
@@ -43,19 +43,16 @@
                 },
                 organization:{
                     org_all     : 'organizations',
-                    org_add     : 'organizations'
+                    org_add     : 'organizations',
+                    add_orgConf : 'set_config_for_organization',
+                    get_orgConf : 'get_config_for_organization',
+                    networks : 'organizations'
                 },
                 services : {
                     org         : 'get_services_for_organization',
                     msp         : 'services',
                     add         : 'set_services_for_organization',
-                    get_conf    : 'get_config_for_organization',
-                    add_conf    : 'set_config_for_organization',
                     get_saml    : 'get_meraki_saml_data',
-                    get_sites   : 'sites',
-                    add_site    : 'sites',
-                    get_site_conf : 'sites',
-                    add_site_conf   : 'sites'
                 },
                 meraki : {
                     sites   : 'sites',
@@ -63,9 +60,16 @@
                     add_site : 'sites',
                     set_site_conf  : 'sites',
                     add_m_network : 'sites',
-                    networks : 'organizations'
 
-                }
+
+                },
+                sites : {
+                    site_conf : 'sites',
+                    get_sites   : 'sites',
+                    add_site    : 'sites',
+                    get_site_conf : 'sites',
+                    add_site_conf   : 'sites'
+    }
             }
         })
 
@@ -80,6 +84,7 @@
         }
 
         function callMaker(endpoint, parameters){
+
             //get the tokenß
             var method = 'GET';
 
@@ -90,6 +95,7 @@
             //get call path
             var sd = endpoint.split('.'), sf, pd;
 
+
             //if shd[1] constains '?', extract parameter and e
             if(sd[1].indexOf('?') !== -1){
                 pd = sd[1].split('?');
@@ -98,7 +104,9 @@
             }else{
                 //build url
                 sf = api_vars.routes[sd[0]][sd[1]];
+
             }
+
 
             //if path variable has key words [add, request, create]
             //change method to POST
@@ -122,9 +130,16 @@
                 method = 'PUT';
             }
 
+            if(sd.length > 3){
+
+            }
+
             if(sd.length > 2){
                 //third is parameter
                 sf = sf + '/' + sd[2];
+                if(sd[3] !== undefined){
+                    sf = sf + '/' + sd[3];
+                }
             }
 
             var promise = $http({

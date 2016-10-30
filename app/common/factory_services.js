@@ -26,16 +26,8 @@
             getConf : getMerakiConf,
             setConf : setMerakiConf,
             getSAML : getSAMLData,
-            getMerakiNetworks : getMerakiNetworks,
+
             getMerakiConfTemplate : getMerakiConfTemplate,
-            getSite : getSite,
-            createSite  : createSite,
-            updateSite  : updateSite,
-            getSites    : getSites,
-            deleteSites : deleteSites,
-            getSiteConf : getSiteConf,
-            setSiteConf : setSiteConf,
-            createMerakiNetwork : createMerakiNetwork
 
         };
 
@@ -81,65 +73,14 @@
 
             return promise;
         }
-        
-        function getMerakiNetworks(orgId){
-            route = 'meraki.networks.' + orgId + '.meraki_networks';
-            var promise = mccapi.callAPI(route, {});
-            return promise;
-        }
+
         
         function getMerakiConfTemplate(orgId) {
-            route = 'meraki.networks.' + orgId + 'meraki_network_config_templates';
+            route = 'meraki.networks.' + orgId + '.meraki_network_config_templates';
             var promise = mccapi.callAPI(route, {});
             return promise;
         }
 
-        //site mappings
-
-        function getSite(siteId) {
-            route = 'services.get_conf.' + siteId + '.config';
-            var promise = mccapi.callAPI(route, {});
-            return promise;
-        }
-
-        function createSite(payload) {
-            route = 'services.add_site';
-            var promise = mccapi.callAPI(route, payload);
-            return promise;
-        }
-
-        function updateSite(siteId, payload) {
-
-        }
-
-        function getSites(payload) {
-            route = 'services.get_sites?' + payload;
-            var promise = mccapi.callAPI(route, {});
-
-            return promise;
-        }
-
-        function deleteSites(siteId) {
-
-        }
-
-        function getSiteConf(siteId) {
-            route = 'services.get_conf.' + siteId + '.config';
-            var promise = mccapi.callAPI(route, {});
-            return promise;
-        }
-
-        function setSiteConf(siteId, payload) {
-            route = 'services.add_conf.' + siteId + '.config';
-            var promise = mccapi.callAPI(route, payload);
-            return promise;
-        }
-
-        function createMerakiNetwork(orgId) {
-            route = 'msps.';
-            var promise = mccapi.callAPI(route, payload);
-            return promise;
-        }
     }
 
 })();

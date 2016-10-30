@@ -61,9 +61,10 @@
                 //user is an msp
                 self.activeUserRole = 'admin';
             }
-
+            self.loading = true;
             var payload = 'organization_id=' + self.orgId;
             User.getUsers(payload, null).then(function (response) {
+                self.loading = false;
                     if(response.data !== undefined){
                         Cachebox.put('orgusers', response.data);
                         self.orgUserList = response.data;
@@ -205,7 +206,7 @@
                     //alert admin that email was send and user notified
                     $mdToast.show(
                         $mdToast.simple()
-                            .textContent('Email has been sent!')
+                            .textContent('Org Config Saved!')
                             .position('top right')
                             .hideDelay(3000)
                     );

@@ -24,6 +24,7 @@
         self.addOrganization = addOrganization;
         self.viewOrgServices = viewOrgServices;
         self.viewOrgUsers = viewOrgUsers;
+        self.orgsContentLoading = true;
 
 
         //if we are here, we assume token is valid
@@ -34,7 +35,7 @@
         var localUser = Cachebox.get('user');
 
         if(Cachebox.get('organizations') != undefined){
-
+            self.orgsContentLoading = false;
             self.organizationList = Cachebox.get('organizations');
 
             if(self.organizationList.length == 0){
@@ -43,11 +44,11 @@
 
         }else{
 
-
+            self.orgsContentLoading = true;
             Organization.getOrganizations(localUser.msp_id)
 
                 .then(function(response){
-
+                    self.orgsContentLoading = false;
                     Cachebox.put('organizations', response.data);
                     self.organizationList = response.data;
                     _mainController.organizationList = self.organizationList;

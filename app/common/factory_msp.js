@@ -23,7 +23,7 @@
             getMSP : getMSP,
             getMSPs : getMSPs,
             getMSPbyURL : getMSPbyURL,
-            merakiOrganizations : merakiOrganizations,
+            getMerakiOrganizations : getMerakiOrganizations,
             createMSP : createMSP,
             updateMSP : updateMSP
 
@@ -49,8 +49,10 @@
 
         }
 
-        function merakiOrganizations() {
-
+        function getMerakiOrganizations(msp_id) {
+            route = 'msps.msps.' + msp_id + '.meraki_organizations';
+            var promise = mccapi.callAPI(route, {});
+            return promise;
         };
 
         function createMSP(payload){

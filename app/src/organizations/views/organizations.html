@@ -8,19 +8,11 @@
         </md-button>
     </div>
 </md-toolbar>
-<md-content layout="column" >
-    <div flex="35" ng-if="_organizations.noOrgs" layout="row" layout-align="center" >
-        <md-card class="md-padding">
-            <md-card-content>
-                <h3>Looks like you don't have any organizations.</h3>
-
-            </md-card-content>
-            <md-card-actions layout="row" layout-align="start center">
-                <md-button ng-click="_organizations.addOrganization()" class="md-raised md-primary">Create Organization</md-button>
-            </md-card-actions>
-        </md-card>
+<md-content layout="column" ng-switch="_organizations.orgsContentLoading">
+    <div layout="column" ng-switch-when="true">
+        <md-progress-linear md-mode="indeterminate"></md-progress-linear>
     </div>
-    <md-list>
+    <md-list ng-switch-when="false">
         <md-list-item class="md-offset org_list"  ng-repeat="item in _organizations.organizationList">
 
                 <p>{{item.name}}</p>
@@ -42,4 +34,15 @@
             <md-divider ng-if="!$last"></md-divider>
         </md-list-item>
     </md-list>
+    <div flex="35" ng-if="_organizations.noOrgs" layout="row" layout-align="center" >
+        <md-card class="md-padding">
+            <md-card-content>
+                <h3>Looks like you don't have any organizations.</h3>
+
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="start center">
+                <md-button ng-click="_organizations.addOrganization()" class="md-raised md-primary">Create Organization</md-button>
+            </md-card-actions>
+        </md-card>
+    </div>
 </md-content>

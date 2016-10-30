@@ -66,6 +66,7 @@
         }
         
         //get org services
+        self.loading = true;
         Services.getOrg(self.orgId)
             .then(function (res) {
                 console.log(res)
@@ -73,6 +74,7 @@
                 if( res.data.length == 0){
                     self.hasNoServices = false;
                 }
+                self.loading = false;
 
             }).catch(function (e) {
             

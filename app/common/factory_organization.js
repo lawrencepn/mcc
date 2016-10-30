@@ -22,7 +22,10 @@
         return {
 
             getOrganizations: getOrganizations,
-            add : addOrganization
+            add : addOrganization,
+            setConfig : setOrganizationConfig,
+            getConfig : getOrganizationConfig,
+            getMerakiNetworks : getMerakiNetworks
         };
 
         function getOrganizations(msp){
@@ -45,10 +48,28 @@
                     "name": orgDetails.name,
                     "enabled": orgDetails.enabled ? 1 : 0
                 }
-            }
+            };
 
             var promise = mccapi.callAPI(route, data);
 
+            return promise;
+        }
+
+        function setOrganizationConfig(org_id, payload){
+            route = 'organization.add_orgConf.' + org_id;
+            var promise = mccapi.callAPI(route, payload);
+            return promise;
+        }
+
+        function getOrganizationConfig(org_id) {
+            route = 'organization.get_orgConf.' + org_id;
+            var promise = mccapi.callAPI(route, {});
+            return promise;
+        }
+
+        function getMerakiNetworks(orgId){
+            route = 'organization.networks.' + orgId + '.meraki_networks';
+            var promise = mccapi.callAPI(route, {});
             return promise;
         }
 

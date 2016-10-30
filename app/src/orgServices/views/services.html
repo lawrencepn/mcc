@@ -8,8 +8,11 @@
     </div>
 </md-toolbar>
 
-<div flex layout="column" layout-fill>
-    <md-tabs md-dynamic-height md-border-bottom>
+<div flex layout="column" ng-switch="_orgservices.loading" layout-fill>
+    <div layout="column" ng-switch-when="true">
+        <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+    </div>
+    <md-tabs md-dynamic-height md-border-bottom ng-switch-when="false">
         <md-tab ng-repeat="tab in _orgservices.services"
                 ng-disabled="tab.disabled"
                 label="{{tab.name}}">

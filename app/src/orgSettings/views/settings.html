@@ -1,18 +1,44 @@
-<md-toolbar class="mcc">
-    <div class="md-toolbar-tools gray">
-        <span flex></span>
-    </div>
-</md-toolbar>
-<md-content>
-    <div flex="35" layout="row">
-        <md-card class="md-padding">
-            <md-card-content>
-                <h3>Meraki Mapping</h3>
-            </md-card-content>
-            <md-card-actions layout="row" layout-align="start center">
-                <md-button ng-click="" class="md-raised md-primary">Map Organization</md-button>
-            </md-card-actions>
-        </md-card>
-    </div>
+<md-section>
+    <md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
+        <md-toolbar class="md-theme-light">
+            <h1 class="md-toolbar-tools">Meraki Org Mapping</h1>
+        </md-toolbar>
+        <md-content ng-switch="_orgsettings.sideNavContent">
+            <div layout="column" ng-switch-when="false">
+                <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+            </div>
+            <div layout="column" layout-padding ng-switch-when="true">
+                <h4>Meraki Mapping</h4>
+                <p class="md-caption">Select A Meraki Org to map to</p>
 
+                <md-radio-group ng-model="mn">
+                    <md-list>
+                        <md-list-item class="org_list" ng-repeat="merakiOrg in _orgsettings.meraki_organizations">
+                            <md-radio-button value="{{$index}}" ng-model="mn.mOrg"></md-radio-button>
+                            <p>{{merakiOrg.name}}</p>
+                            <md-divider ng-if="!$last"></md-divider>
+                        </md-list-item>
+                    </md-list>
+                </md-radio-group>
+
+                <md-input-container class="md-padding" layout-align="end">
+                    <md-button aria-label="Save" ng-click="_orgsettings.mapOrg(mn)" class="md-raised md-primary">Save</md-button>
+                </md-input-container>
+            </div>
+        </md-content>
+    </md-sidenav>
+    <md-content layout-fill layout="column">
+        <div flex="35" layout="row">
+            <md-card class="md-padding">
+                <md-card-content>
+                    <h3>Meraki Organisation Mapping</h3>
+                    <h4>Mapped to : {{_orgsettings.activeOrgConfig.meraki_organization_name}}</h4>
+                    <p class="md-caption">{{_orgsettings.activeOrgConfig.meraki_organization_id}}</p>
+                </md-card-content>
+                <md-card-actions layout="row" layout-align="start center">
+                    <md-button ng-click="_orgsettings.merakiOrgMap()" aria-label="Mapping" class="md-raised md-primary">Mapping</md-button>
+                </md-card-actions>
+            </md-card>
+        </div>
 </md-content>
+</md-section>
